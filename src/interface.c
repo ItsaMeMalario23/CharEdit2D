@@ -70,7 +70,7 @@ void loadObject(const ascii2info_t* object, u32 len)
     charIdx idx;
 
     for (u32 i = 0; i < len; i++) {
-        idx = asciiChar2D(object[i].pos.x + 50.0f, object[i].pos.y + 50.0f, object[i].color, object[i].charID);
+        idx = asciiChar2D(object[i].pos.x, object[i].pos.y, object[i].color, object[i].charID);
 
         if (idx < 0) {
             SDL_Log("ERROR: create ascii char returned invalid index while loading object, aborting");

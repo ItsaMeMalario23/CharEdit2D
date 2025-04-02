@@ -1,5 +1,6 @@
 #define SDL_MAIN_USE_CALLBACKS 1
 
+#include <math.h>
 #include <stdio.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
@@ -73,6 +74,52 @@ void mainScreen(void)
     SDL_RenderPresent(g_renderer);
 }
 
+void getCircleCoords(f32 radius, f32 x1, f32 y1, u32 divisions)
+{
+    f32 r2 = radius * radius;
+
+    for (u32 i = 0; i <= divisions; i++) {
+        f32 seg = sinf(((f32) i / (f32) divisions) * (M_PI / 2)) * (radius * 2);
+
+        //printf("seg %.2f: %.2f\n", ((f32) i / divisions) * (M_PI / 2), seg);
+
+        f32 f = sqrtf(r2 - (x1 * x1) + (2 * x1 * (x1 - radius + seg)) - (((x1 - radius + seg) * (x1 - radius + seg))));
+
+        if (!i || i == divisions) {
+            printf("X: {%.1f, %.1f}\n", x1 - radius + seg, y1 + f);
+        } else {
+            printf("X: {%.1f, %.1f} {%.1f, %.1f}\n", x1 - radius + seg, y1 - f, x1 - radius + seg, y1 + f);
+        }
+    }
+}
+
+void getCircleCoords2(f32 radius, f32 x1, f32 y1, u32 divisions)
+{
+    f32 r2 = radius * radius;
+
+    for (u32 i = 0; i <= divisions; i++) {
+        f32 seg = (1.0f - cosf(((f32) i / (f32) divisions) * (M_PI / 2))) * radius;
+
+        f32 f = sqrtf(r2 - (x1 * x1) + (2 * x1 * (x1 - radius + seg)) - (((x1 - radius + seg) * (x1 - radius + seg))));
+
+        if (i == divisions) {
+            if (!i) {
+                printf("{\'G\', WHITE, {%.1ff, %.1ff}},\n", x1 - radius + seg, y1 + f);
+            } else {
+                printf("{\'G\', WHITE, {%.1ff, %.1ff}}, {\'G\', WHITE, {%.1ff, %.1ff}},\n", x1 - radius + seg, y1 - f, x1 - radius + seg, y1 + f);
+            }
+        } else {
+            if (!i) {
+                printf("{\'G\', WHITE, {%.1ff, %.1ff}},\n", x1 - radius + seg, y1 + f);
+                printf("{\'G\', WHITE, {%.1ff, %.1ff}},\n", x1 + radius - seg, y1 + f);
+            } else {
+                printf("{\'G\', WHITE, {%.1ff, %.1ff}}, {\'G\', WHITE, {%.1ff, %.1ff}},\n", x1 - radius + seg, y1 - f, x1 - radius + seg, y1 + f);
+                printf("{\'G\', WHITE, {%.1ff, %.1ff}}, {\'G\', WHITE, {%.1ff, %.1ff}},\n", x1 + radius - seg, y1 - f, x1 + radius - seg, y1 + f);
+            }
+        }
+    }
+}
+
 //
 //  SDL Init
 //
@@ -88,6 +135,15 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
         return SDL_APP_FAILURE;
     }
 
+    puts("c16 r100");
+    getCircleCoords2(100, 200, 200, 4);
+    puts("c12 r92");
+    getCircleCoords2(92, 200, 200, 3);
+    puts("c12 r71");
+    getCircleCoords2(71, 200, 200, 3);
+    puts("c8 r38");
+    getCircleCoords2(38, 200, 200, 2);
+
     initInterface();
 
     initRenderer();
@@ -97,7 +153,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
     if (!loadCharTextures("..\\resources\\ascii\\pressstart\\", 95))
         return SDL_APP_FAILURE;
 
-    // loadObject(o_asciiBird, O_ASCII_BIRD_LEN);
+    loadObject(c38, 8);
     
     SDL_SetRenderScale(g_renderer, WINDOW_SCALE, WINDOW_SCALE);
 

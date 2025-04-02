@@ -50,3 +50,50 @@ const ascii2info_t o_asciiPipeSection[9] = {
     { '!', MGREEN, {34, 61}}, {'E', DGREEN, {47, 61}}, {'|', LGREEN, {62, 61}}, 
     {'\"', MGREEN, {12, 67}}, {'`', MGREEN, {56, 63}}, {'`', MGREEN, {56, 69}}
 };
+
+const ascii2info_t o_circleww[16] = {
+    {'G', WHITE, {100.0, 200.0}}, {'G', WHITE, {300.0, 200.0}}, {'G', WHITE, {139.0, 120.7}}, {'G', WHITE, {139.0, 279.3}}, 
+    {'G', WHITE, {176.5, 102.8}}, {'G', WHITE, {176.5, 297.2}}, {'G', WHITE, {211.1, 100.6}}, {'G', WHITE, {211.1, 299.4}},
+    {'G', WHITE, {241.4, 109.0}}, {'G', WHITE, {241.4, 291.0}}, {'G', WHITE, {266.3, 125.1}}, {'G', WHITE, {266.3, 274.9}}, 
+    {'G', WHITE, {284.8, 147.0}}, {'G', WHITE, {284.8, 253.0}}, {'G', WHITE, {296.2, 172.5}}, {'G', WHITE, {296.2, 227.5}},
+};
+
+const ascii2info_t o_circle[16] = {
+    {'G', WHITE, {100.0f, 200.0f}},
+    {'G', WHITE, {300.0f, 200.0f}},
+    {'G', WHITE, {107.6f, 161.7f}}, {'G', WHITE, {107.6f, 238.3f}},
+    {'G', WHITE, {292.4f, 161.7f}}, {'G', WHITE, {292.4f, 238.3f}},
+    {'G', WHITE, {129.3f, 129.3f}}, {'G', WHITE, {129.3f, 270.7f}},
+    {'G', WHITE, {270.7f, 129.3f}}, {'G', WHITE, {270.7f, 270.7f}},
+    {'G', WHITE, {161.7f, 107.6f}}, {'G', WHITE, {161.7f, 292.4f}},
+    {'G', WHITE, {238.3f, 107.6f}}, {'G', WHITE, {238.3f, 292.4f}},
+    {'G', WHITE, {200.0f, 100.0f}}, {'G', WHITE, {200.0f, 300.0f}},
+};
+
+const ascii2info_t c92[12] = {
+    {'G', WHITE, {108.0f, 200.0f}},
+    {'G', WHITE, {292.0f, 200.0f}},
+    {'G', WHITE, {120.3f, 154.0f}}, {'G', WHITE, {120.3f, 246.0f}},
+    {'G', WHITE, {279.7f, 154.0f}}, {'G', WHITE, {279.7f, 246.0f}},
+    {'G', WHITE, {154.0f, 120.3f}}, {'G', WHITE, {154.0f, 279.7f}},
+    {'G', WHITE, {246.0f, 120.3f}}, {'G', WHITE, {246.0f, 279.7f}},
+    {'G', WHITE, {200.0f, 108.0f}}, {'G', WHITE, {200.0f, 292.0f}},
+};
+
+const ascii2info_t c71[12] = {
+    {'G', WHITE, {129.0f, 200.0f}},
+    {'G', WHITE, {271.0f, 200.0f}},
+    {'G', WHITE, {138.5f, 164.5f}}, {'G', WHITE, {138.5f, 235.5f}},
+    {'G', WHITE, {261.5f, 164.5f}}, {'G', WHITE, {261.5f, 235.5f}},
+    {'G', WHITE, {164.5f, 138.5f}}, {'G', WHITE, {164.5f, 261.5f}},
+    {'G', WHITE, {235.5f, 138.5f}}, {'G', WHITE, {235.5f, 261.5f}},
+    {'G', WHITE, {200.0f, 129.0f}}, {'G', WHITE, {200.0f, 271.0f}},
+};
+
+const ascii2info_t c38[8] = {
+    {'G', WHITE, {162.0f, 200.0f}},
+    {'G', WHITE, {238.0f, 200.0f}},
+    {'G', WHITE, {173.1f, 173.1f}}, {'G', WHITE, {173.1f, 226.9f}},
+    {'G', WHITE, {226.9f, 173.1f}}, {'G', WHITE, {226.9f, 226.9f}},
+    {'G', WHITE, {200.0f, 162.0f}}, {'G', WHITE, {200.0f, 238.0f}},
+};

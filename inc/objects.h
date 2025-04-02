@@ -13,5 +13,9 @@ extern const ascii2info_t o_asciiBird[O_ASCII_BIRD_LEN];
 extern const ascii2info_t o_asciiPipeHeadTop[O_PIPE_HEAD_TOP_LEN];
 extern const ascii2info_t o_asciiPipeHeadBot[O_PIPE_HEAD_BOT_LEN];
 extern const ascii2info_t o_asciiPipeSection[O_PIPE_SECTION_LEN];
+extern const ascii2info_t o_circle[16];
+extern const ascii2info_t c92[12];
+extern const ascii2info_t c71[12];
+extern const ascii2info_t c38[8];
 
 #endif
