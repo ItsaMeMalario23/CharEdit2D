@@ -3,25 +3,25 @@
 
 #include <main.h>
 
-#define COLOR_RED       0xff000000
-#define COLOR_GREEN     0x00ff0000
-#define COLOR_BLUE      0x0000ff00
-#define COLOR_YELLOW    0xfce80300
-#define COLOR_GOLD      0xfcd30300
-#define COLOR_PURPLE    0xa103fc00
-#define COLOR_AZURE     0x03ecfc00
-#define COLOR_OLIVE     0x01750500
-#define COLOR_BLACK     0x00000000
-#define COLOR_WHITE     0xffffff00
-#define COLOR_WWHITE    0xe0e0ce00
-#define COLOR_L_YELLOW  0xffee9c00
-#define COLOR_L_GRAY    0xa3a4a400
-#define COLOR_D_GRAY    0x36363600
-#define COLOR_D_GREEN   0x00300000
-#define COLOR_M_GREEN   0x0d700000
-#define COLOR_L_GREEN   0x40d80000
+#define COLOR_RED       0xff0000ff
+#define COLOR_GREEN     0x00ff00ff
+#define COLOR_BLUE      0x0000ffff
+#define COLOR_YELLOW    0xfce803ff
+#define COLOR_GOLD      0xfcd303ff
+#define COLOR_PURPLE    0xa103fcff
+#define COLOR_AZURE     0x03ecfcff
+#define COLOR_OLIVE     0x017505ff
+#define COLOR_BLACK     0x000000ff
+#define COLOR_WHITE     0xffffffff
+#define COLOR_WWHITE    0xe0e0ceff
+#define COLOR_L_YELLOW  0xffee9cff
+#define COLOR_L_GRAY    0xa3a4a4ff
+#define COLOR_D_GRAY    0x363636ff
+#define COLOR_D_GREEN   0x003000ff
+#define COLOR_M_GREEN   0x0d7000ff
+#define COLOR_L_GREEN   0x40d800ff
 
-#define COLOR_HITBOXES  0xff000000  // red
+#define COLOR_HITBOXES  COLOR_RED
 
 #define MAX_TEXTURES        4
 #define MAX_ASCII_TEXTURES  128

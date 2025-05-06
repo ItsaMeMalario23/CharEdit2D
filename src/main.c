@@ -72,14 +72,15 @@ void mainScreen(void)
     }
 
     // render animation frameinfo
-    if (g_animation.len > 1) {
+    if (g_numframes > 1) {
         renderRectangleColor(1160.0f, 675.0f, 90.0f, 16.0f, COLOR_D_GRAY);
-        renderStrColorFmt(1165, 680, 0.125f, COLOR_WHITE, "FRAME %d/%d", g_animframe + 1, g_animation.len);
+        renderStrColorFmt(1165, 680, 0.125f, COLOR_WHITE, "FRAME %d/%d", g_frameidx, g_numframes);
     }
 
     SDL_RenderPresent(g_renderer);
 }
 
+/*
 void getCircleCoords(f32 radius, f32 x1, f32 y1, u32 divisions)
 {
     f32 r2 = radius * radius;
@@ -125,6 +126,7 @@ void getCircleCoords2(f32 radius, f32 x1, f32 y1, u32 divisions)
         }
     }
 }
+*/
 
 //
 //  SDL Init
@@ -150,7 +152,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
     if (!loadCharTextures("..\\resources\\ascii\\pressstart\\", 95))
         return SDL_APP_FAILURE;
 
-    loadObject(c38, 8);
+    loadObject(o_asciiBird, O_ASCII_BIRD_LEN);
     
     SDL_SetRenderScale(g_renderer, WINDOW_SCALE, WINDOW_SCALE);
 

@@ -28,14 +28,17 @@
 #define INPUT_Z         11
 #define INPUT_P         12
 #define INPUT_X         13
-#define INPUT_H         14
-#define INPUT_R         15
-#define INPUT_PLUS      16
-#define INPUT_MINUS     17
-#define INPUT_TAB       18
-#define INPUT_O         19
-#define INPUT_DOT       20
-#define INPUT_COMMA     21
+#define INPUT_Y         14
+#define INPUT_H         15
+#define INPUT_R         16
+#define INPUT_PLUS      17
+#define INPUT_MINUS     18
+#define INPUT_TAB       19
+#define INPUT_O         20
+#define INPUT_DOT       21
+#define INPUT_COMMA     22
+
+#define INPUT_MAP_SIZE  23
 
 typedef struct frame_s frame_t;
 
@@ -43,6 +46,7 @@ struct frame_s {
     frame_t*    next;
     frame_t*    prev;
     vec2f_t*    positions;
+    u64         bufsize;
 };
 
 extern u32 g_inputmode;
@@ -65,36 +69,13 @@ extern vec2f_t g_anchor;
 extern vec2f_t g_anchortmp;
 extern vec2f_t g_roffset;
 
-extern asciianim_t g_animation;
-extern u32 g_animframe;
+extern u32 g_frameidx;
+extern u32 g_numframes;
 
 void initInterface(void);
 void loadObject(const ascii2info_t* object, u32 len);
-void updateCharBuf(void);
-
-// Std input callbacks
-void addCharCallback(void);
-void mvUpCallback(void);
-void mvLeftCallback(void);
-void mvDownCallback(void);
-void mvRightCallback(void);
-void chColorCallback(void);
-void chCharCallback(void);
-void charUpCallback(void);
-void charDownCallback(void);
-void charUpWrapCallback(void);
-void createStructCallback(void);
-void toggleBoxCallback(void);
-void editAnchorCallback(void);
-void zoomInCallback(void);
-void zoomOutCallback(void);
-void scrUpCallback(void);
-void scrLeftCallback(void);
-void scrDownCallback(void);
-void scrRightCallback(void);
-void addFrameCallback(void);
-void frameStepForward(void);
-void frameStepBackward(void);
+void updateCharBuf(frame_t* restrict frame);
+void updateFrameBuf(frame_t* restrict frame);
 
 // Input handlers
 SDL_AppResult stdInputMode(SDL_Keycode input);
