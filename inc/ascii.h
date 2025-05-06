@@ -83,6 +83,14 @@ typedef struct asciiobj_s {
 
 } asciiobj_t;
 
+typedef struct asciianim_s {
+    asciiobj_t* object;
+    vec3f_t*    data;
+    u16         len;
+    u16         type;       // relative / alsolute coordinates
+    u32         speed;      // frames per step
+} asciianim_t;
+
 // linked list for paged memory
 struct pageinfo_s {
     void*       ptr;

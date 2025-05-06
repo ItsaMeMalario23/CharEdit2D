@@ -6,10 +6,12 @@
 #include <render.h>
 #include <ascii.h>
 #include <debug/rdebug.h>
+#include <debug/memtrack.h>
 
 bool g_iterate = 0;
 bool g_shift = 0;
 bool g_box = 0;
+bool g_alt = 0;
 
 f32 g_rscale = 1.0f;
 vec2f_t g_roffset = {0.0f, 0.0f};
@@ -26,7 +28,12 @@ char2Idx g_current = -1;
 vec2f_t g_anchor = {0.0f, 0.0f};
 vec2f_t g_anchortmp = {0.0f, 0.0f};
 
-input_f inputCallbacks[18];
+frame_t g_baseframe;
+frame_t* g_currentframe = &g_baseframe;
+u32 g_frameidx = 1;
+u32 g_numframes = 1;
+
+input_f inputCallbacks[24];
 
 void initInterface(void)
 {
@@ -55,6 +62,12 @@ void initInterface(void)
     inputCallbacks[INPUT_LEFT] = scrLeftCallback;
     inputCallbacks[INPUT_DOWN] = scrDownCallback;
     inputCallbacks[INPUT_RIGHT] = scrRightCallback;
+    inputCallbacks[INPUT_TAB] = charUpWrapCallback;
+    inputCallbacks[INPUT_O] = addFrameCallback;
+    inputCallbacks[INPUT_DOT] = frameStepForward;
+    inputCallbacks[INPUT_COMMA] = frameStepBackward;
+
+    g_baseframe.positions = (vec2f_t*) memAllocInit(sizeof(vec2f_t), ANIM_BUF_SIZE);
 }
 
 void loadObject(const ascii2info_t* object, u32 len)
@@ -83,12 +96,22 @@ void loadObject(const ascii2info_t* object, u32 len)
     g_current = g_chars[g_charidx - 1];
 }
 
+void updateCharBuf(void)
+{
+    rAssert(g_currentframe);
+
+    for (u32 i = 0; i < g_charidx; i++) {
+        g_charbuf2D[g_chars[i]].xpos = g_currentframe->positions[i].x;
+        g_charbuf2D[g_chars[i]].ypos = g_currentframe->positions[i].y;
+    }
+}
+
 //
 //  Std input callbacks
 //
 void addCharCallback(void)
 {
-    if (g_charidx >= ASCII_MAX_2D_CHARS) {
+    if (g_charidx >= ASCII_MAX_2D_CHARS || g_charidx >= ANIM_BUF_SIZE) {
         SDL_Log("Failed to add char, buffer full");
         return;
     }
@@ -143,14 +166,20 @@ void chCharCallback(void)
 
 void charUpCallback(void)
 {
-    if (g_current)
+    if (g_current > 0)
         g_current--;
 }
 
 void charDownCallback(void)
 {
-    if (g_current + 1 < g_charidx)
+    if (g_current >= 0 && g_current + 1 < g_charidx)
         g_current++;
+}
+
+void charUpWrapCallback(void)
+{
+    if (g_current >= 0 && ++g_current >= g_charidx)
+        g_current = 0;
 }
 
 void createStructCallback(void)
@@ -229,6 +258,42 @@ void scrDownCallback(void)
 void scrRightCallback(void)
 {
     g_roffset.x -= g_shift ? roundf(SHIFT_ACCEL * g_rscale) : 1.0f;
+}
+
+void addFrameCallback(void)
+{    
+    rAssert(g_currentframe);
+    rWarning(g_charidx < ANIM_BUF_SIZE);
+
+    frame_t* tmp = (frame_t*) memAlloc(sizeof(frame_t));
+
+    tmp->positions = (vec2f_t*) memAllocInit(sizeof(vec2f_t), ANIM_BUF_SIZE);
+    memcpy(tmp->positions, g_currentframe->positions, g_charidx * sizeof(vec2f_t));
+
+    tmp->prev = g_currentframe;
+    tmp->next = g_currentframe->next;
+
+    g_currentframe = tmp;
+    g_numframes++;
+    g_frameidx++;
+}
+
+void frameStepForward(void)
+{
+    if (g_currentframe && g_currentframe->next) {
+        g_currentframe = g_currentframe->next;
+        g_frameidx++;
+        updateCharBuf();
+    }
+}
+
+void frameStepBackward(void)
+{
+    if (g_currentframe && g_currentframe->prev) {
+        g_currentframe = g_currentframe->prev;
+        g_frameidx--;
+        updateCharBuf();
+    }
 }
 
 //
@@ -330,6 +395,26 @@ SDL_AppResult stdInputMode(SDL_Keycode input)
         if (inputCallbacks[INPUT_MINUS])
             inputCallbacks[INPUT_MINUS]();
         break;
+
+    case SDLK_TAB:
+        if (inputCallbacks[INPUT_TAB])
+            inputCallbacks[INPUT_TAB]();
+        break;
+
+    case SDLK_O:
+        if (inputCallbacks[INPUT_O])
+            inputCallbacks[INPUT_O]();
+        break;
+
+    case SDLK_COLON:
+        if (inputCallbacks[INPUT_DOT])
+            inputCallbacks[INPUT_DOT]();
+        break;
+
+    case SDLK_COMMA:
+        if (inputCallbacks[INPUT_COMMA])
+            inputCallbacks[INPUT_COMMA]();
+        break;
     }
 
     return SDL_APP_CONTINUE;
@@ -410,35 +495,56 @@ SDL_AppResult anchorInputMode(SDL_Keycode input)
 //
 //  Local functions
 //
-const char translateNums[10] = {'=', '!', '\"', '\\', '$', '%', '&', '/', '(', ')'};
+const char shiftNums[10] = {'=', '!', '\"', '\\', '$', '%', '&', '/', '(', ')'};
+const char altNums[10] = {0, 0, 0, 0, 0, 0, '{', '[', ']', '}'};
 
 char getInputChar(char input)
 {
-    if (!g_shift)
-        return input;
+    if (g_shift)
+    {
+        if (input > 96 && input < 123)
+            return input - 32;  // to upper
 
-    if (input > 96 && input < 123)
-        return input - 32;  // to upper
+        if (input > 47 && input < 58)
+            return shiftNums[input - 48];
 
-    if (input > 47 && input < 58)
-        return translateNums[input - 48];
+        switch (input) {
+        case ',':
+            return ';';
+        case '.':
+            return ':';
+        case '#':
+            return '\'';
+        case '+':
+            return '*';
+        case '-':
+            return '_';
+        case '<':
+            return '>';
+        }
 
-    switch (input) {
-    case ',':
-        return ';';
-    case '.':
-        return ':';
-    case '#':
-        return '\'';
-    case '+':
-        return '*';
-    case '-':
-        return '_';
-    case '<':
-        return '>';
+        return 0;
     }
+    else if (g_alt)
+    {
+        if (input > 47 && input < 58)
+            return altNums[input - 48];
 
-    return 0;
+        switch (input) {
+        case 'q':
+            return '@';
+        case '<':
+            return '|';
+        case '+':
+            return '~';
+        }
+
+        return 0;
+    }
+    else
+    {
+        return input;
+    }
 }
 
 void processTxtInput(void)

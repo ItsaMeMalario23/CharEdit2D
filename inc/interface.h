@@ -10,6 +10,8 @@
 #define INPUT_MODE_COLOR    2
 #define INPUT_MODE_ANCHOR   3
 
+#define ANIM_BUF_SIZE       64
+
 #define SHIFT_ACCEL         (20.0f)
 
 #define INPUT_UP        0
@@ -30,6 +32,18 @@
 #define INPUT_R         15
 #define INPUT_PLUS      16
 #define INPUT_MINUS     17
+#define INPUT_TAB       18
+#define INPUT_O         19
+#define INPUT_DOT       20
+#define INPUT_COMMA     21
+
+typedef struct frame_s frame_t;
+
+struct frame_s {
+    frame_t*    next;
+    frame_t*    prev;
+    vec2f_t*    positions;
+};
 
 extern u32 g_inputmode;
 extern u32 g_inputidx;
@@ -45,13 +59,18 @@ extern char2Idx g_current;
 extern bool g_iterate;
 extern bool g_shift;
 extern bool g_box;
+extern bool g_alt;
 
 extern vec2f_t g_anchor;
 extern vec2f_t g_anchortmp;
 extern vec2f_t g_roffset;
 
+extern asciianim_t g_animation;
+extern u32 g_animframe;
+
 void initInterface(void);
 void loadObject(const ascii2info_t* object, u32 len);
+void updateCharBuf(void);
 
 // Std input callbacks
 void addCharCallback(void);
@@ -63,6 +82,7 @@ void chColorCallback(void);
 void chCharCallback(void);
 void charUpCallback(void);
 void charDownCallback(void);
+void charUpWrapCallback(void);
 void createStructCallback(void);
 void toggleBoxCallback(void);
 void editAnchorCallback(void);
@@ -72,6 +92,9 @@ void scrUpCallback(void);
 void scrLeftCallback(void);
 void scrDownCallback(void);
 void scrRightCallback(void);
+void addFrameCallback(void);
+void frameStepForward(void);
+void frameStepBackward(void);
 
 // Input handlers
 SDL_AppResult stdInputMode(SDL_Keycode input);

@@ -71,6 +71,12 @@ void mainScreen(void)
         renderStrColorFmt(30, 680, 0.125f, COLOR_WHITE, "EDIT %s: %c", str, c);
     }
 
+    // render animation frameinfo
+    if (g_animation.len > 1) {
+        renderRectangleColor(1160.0f, 675.0f, 90.0f, 16.0f, COLOR_D_GRAY);
+        renderStrColorFmt(1165, 680, 0.125f, COLOR_WHITE, "FRAME %d/%d", g_animframe + 1, g_animation.len);
+    }
+
     SDL_RenderPresent(g_renderer);
 }
 
@@ -135,15 +141,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
         return SDL_APP_FAILURE;
     }
 
-    puts("c16 r100");
-    getCircleCoords2(100, 200, 200, 4);
-    puts("c12 r92");
-    getCircleCoords2(92, 200, 200, 3);
-    puts("c12 r71");
-    getCircleCoords2(71, 200, 200, 3);
-    puts("c8 r38");
-    getCircleCoords2(38, 200, 200, 2);
-
     initInterface();
 
     initRenderer();
@@ -175,6 +172,10 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
             g_shift = 0;
         else if (event->key.key == SDLK_LCTRL || event->key.key == SDLK_RCTRL)
             g_box = 0;
+        else if (event->key.key == SDLK_LALT || event->key.key == SDLK_RALT)
+            g_alt = 0;
+
+        return SDL_APP_CONTINUE;
     }
     else if (event->type == SDL_EVENT_KEY_DOWN)
     {
@@ -183,6 +184,9 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
             return SDL_APP_CONTINUE;
         } else if (event->key.key == SDLK_LCTRL || event->key.key == SDLK_RCTRL) {
             g_box = 1;
+            return SDL_APP_CONTINUE;
+        } else if (event->key.key == SDLK_LALT || event->key.key == SDLK_RALT) {
+            g_alt = 1;
             return SDL_APP_CONTINUE;
         }
 
