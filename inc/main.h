@@ -9,7 +9,7 @@
 #define WINDOW_WIDTH    1280
 #define WINDOW_HEIGHT   720
 
-#define WINDOW_SCALE    (1.0f)
+#define WINDOW_SCALE    (1.5f)
 
 #define EPSILON         (0.0001f)
 

@@ -97,3 +97,10 @@ const ascii2info_t c38[8] = {
     {'G', WHITE, {226.9f, 173.1f}}, {'G', WHITE, {226.9f, 226.9f}},
     {'G', WHITE, {200.0f, 162.0f}}, {'G', WHITE, {200.0f, 238.0f}},
 };
+
+const ascii2info_t pillartop[13] = {
+    {'=', 0xffffffff, {2, -2}}, {'=', 0xffffffff, {18, -2}}, {'=', 0xffffffff, {34, -2}}, {'=', 0xffffffff, {50, -2}},
+    {'H', 0xffffffff, {7, 11}}, {'H', 0xffffffff, {26, 11}}, {'H', 0xffffffff, {44, 11}}, {'|', 0xffffffff, {6, 29}},
+    {'-', 0xffffffff, {25, 29}}, {'|', 0xffffffff, {43, 29}}, {'|', 0xffffffff, {6, 49}}, {'-', 0xffffffff, {25, 49}},
+    {'|', 0xffffffff, {43, 49}},
+};

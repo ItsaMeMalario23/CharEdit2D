@@ -13,7 +13,7 @@ bool g_shift = 0;
 bool g_box = 0;
 bool g_alt = 0;
 
-f32 g_rscale = 1.0f;
+f32 g_rscale = WINDOW_SCALE;
 vec2f_t g_roffset = {0.0f, 0.0f};
 
 u32 g_inputmode = INPUT_MODE_STD;
@@ -33,6 +33,8 @@ frame_t* g_currentframe = &g_baseframe;
 u32 g_frameidx = 1;
 u32 g_numframes = 1;
 
+f32 g_scrollheight = 0.0f;
+
 static input_f inputMap[INPUT_MAP_SIZE];
 
 //
@@ -40,7 +42,7 @@ static input_f inputMap[INPUT_MAP_SIZE];
 //
 static void addCharCallback(void)
 {
-    if (g_charidx >= ASCII_MAX_2D_CHARS || g_charidx >= ANIM_BUF_SIZE) {
+    if (g_charidx >= ASCII_MAX_2D_CHARS) {
         SDL_Log("Failed to add char, buffer full");
         return;
     }
@@ -48,7 +50,7 @@ static void addCharCallback(void)
     f32 x = g_current < 0 ? 10.0f : g_charbuf2D[g_chars[g_current]].xpos + 16.0f;
     f32 y = g_current < 0 ? 10.0f : g_charbuf2D[g_chars[g_current]].ypos;
 
-    char2Idx i = asciiChar2D(x, y, COLOR_WHITE, 'A');
+    char2Idx i = asciiChar2D(x, y, COLOR_WHITE, '=');
 
     if (i < 0) {
         SDL_Log("ERROR: create ascii char returned invalid index");
@@ -321,6 +323,7 @@ void loadObject(const ascii2info_t* object, u32 len)
     charIdx idx;
 
     for (u32 i = 0; i < len; i++) {
+        //idx = asciiChar2D(object[i].pos.x * 640.0f, -((object[i].pos.y * 360.0f) - (64.0f * ASCII_RENDER_SCALE)), object[i].color, object[i].charID);
         idx = asciiChar2D(object[i].pos.x, object[i].pos.y, object[i].color, object[i].charID);
 
         if (idx < 0) {
@@ -350,18 +353,22 @@ void updateFrameBuf(frame_t* restrict frame)
 {
     rAssert(frame);
 
-    if (frame->positions && frame->bufsize <= g_charidx)
+    u64 size = frame->bufsize;
+
+    while (size <= g_charidx)
+        size += 32;
+
+    rAssert(size < 1024);
+
+    if (frame->positions && frame->bufsize != size)
     {
-        while (frame->bufsize <= g_charidx)
-            frame->bufsize += 32;
-
-        rAssert(frame->bufsize < 1024);
-
-        frame->positions = (vec2f_t*) memRealloc(frame->positions, sizeof(vec2f_t) * frame->bufsize);
+        frame->positions = (vec2f_t*) memRealloc(frame->positions, sizeof(vec2f_t) * size);
+        frame->bufsize = size;
     }
     else if (!frame->positions)
     {
-        frame->positions = (vec2f_t*) memAlloc(sizeof(vec2f_t) * frame->bufsize);
+        frame->positions = (vec2f_t*) memAlloc(sizeof(vec2f_t) * size);
+        frame->bufsize = size;
     }
 
     for (u32 i = 0; i < g_charidx; i++) {

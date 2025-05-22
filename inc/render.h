@@ -16,12 +16,15 @@
 #define COLOR_WWHITE    0xe0e0ceff
 #define COLOR_L_YELLOW  0xffee9cff
 #define COLOR_L_GRAY    0xa3a4a4ff
-#define COLOR_D_GRAY    0x363636ff
+#define COLOR_M_GRAY    0x464646ff
+#define COLOR_D_GRAY    0x262626ff
 #define COLOR_D_GREEN   0x003000ff
 #define COLOR_M_GREEN   0x0d7000ff
 #define COLOR_L_GREEN   0x40d800ff
 
 #define COLOR_HITBOXES  COLOR_RED
+
+#define COLOR_CLEAR     COLOR_D_GRAY
 
 #define MAX_TEXTURES        4
 #define MAX_ASCII_TEXTURES  128

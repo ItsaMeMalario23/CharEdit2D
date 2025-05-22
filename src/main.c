@@ -19,20 +19,78 @@ static SDL_Window* window = NULL;
 
 SDL_Renderer* g_renderer = NULL;
 
+static const ascii2info_t obj[195] = {
+    {'#', 0x40d800ff, {7, 42}}, {'#', 0x40d800ff, {34, 42}}, {'#', 0x40d800ff, {61, 42}}, {'#', 0x40d800ff, {88, 42}},
+    {'#', 0x40d800ff, {115, 42}}, {'*', 0x000000ff, {20, 50}}, {'*', 0x000000ff, {47, 50}}, {'*', 0x000000ff, {74, 50}},
+    {'*', 0x000000ff, {101, 50}}, {'*', 0x000000ff, {34, 63}}, {'*', 0x000000ff, {61, 63}}, {'*', 0x000000ff, {88, 63}},
+    {'*', 0x000000ff, {101, 76}}, {'*', 0x000000ff, {20, 76}}, {'*', 0x000000ff, {47, 76}}, {'*', 0x000000ff, {74, 76}},
+    {'#', 0x40d800ff, {7, 84}}, {'#', 0x40d800ff, {7, 63}}, {'#', 0x40d800ff, {34, 84}}, {'#', 0x40d800ff, {61, 84}},
+    {'#', 0x40d800ff, {88, 84}}, {'#', 0x40d800ff, {115, 84}}, {'#', 0x40d800ff, {115, 63}}, {'+', 0x40d800ff, {19, 63}},
+    {'+', 0x40d800ff, {47, 63}}, {'+', 0x40d800ff, {73, 63}}, {'+', 0x40d800ff, {101, 63}}, {'^', 0x40d800ff, {34, 58}},
+    {'"', 0x40d800ff, {20, 43}}, {'^', 0x40d800ff, {61, 58}}, {'^', 0x40d800ff, {88, 58}}, {'^', 0x40d800ff, {88, 77}},
+    {'^', 0x40d800ff, {34, 77}}, {'^', 0x40d800ff, {61, 77}}, {'"', 0x40d800ff, {47, 43}}, {'"', 0x40d800ff, {74, 43}},
+    {'"', 0x40d800ff, {101, 43}}, {'"', 0x40d800ff, {20, 91}}, {'"', 0x40d800ff, {47, 91}}, {'"', 0x40d800ff, {74, 91}},
+    {'"', 0x40d800ff, {101, 91}}, {'-', 0x40d800ff, {114, 53}}, {'-', 0x40d800ff, {114, 73}}, {'-', 0x40d800ff, {5, 73}},
+    {'-', 0x40d800ff, {5, 53}}, {'=', 0xff0000ff, {134, 39}}, {'=', 0xff0000ff, {150, 39}}, {'=', 0xff0000ff, {166, 39}},
+    {'=', 0xff0000ff, {182, 39}}, {'=', 0xff0000ff, {198, 39}}, {'=', 0xff0000ff, {214, 39}}, {'=', 0xff0000ff, {230, 39}},
+    {'=', 0xff0000ff, {246, 39}}, {'=', 0xff0000ff, {262, 39}}, {'=', 0xff0000ff, {278, 39}}, {'=', 0x000000ff, {134, 49}},
+    {'=', 0x000000ff, {150, 49}}, {'=', 0xff0000ff, {134, 59}}, {'=', 0x000000ff, {134, 69}}, {'=', 0xff0000ff, {134, 79}},
+    {'=', 0x000000ff, {134, 89}}, {'=', 0xff0000ff, {134, 99}}, {'=', 0x000000ff, {134, 109}}, {'=', 0xff0000ff, {134, 119}},
+    {'=', 0x000000ff, {134, 129}}, {'=', 0xff0000ff, {134, 139}}, {'=', 0x000000ff, {166, 49}}, {'=', 0x000000ff, {182, 49}},
+    {'=', 0x000000ff, {198, 49}}, {'=', 0x000000ff, {214, 49}}, {'=', 0x000000ff, {230, 49}}, {'=', 0x000000ff, {246, 49}},
+    {'=', 0x000000ff, {262, 49}}, {'=', 0x000000ff, {278, 49}}, {'=', 0xff0000ff, {150, 59}}, {'=', 0xff0000ff, {166, 59}},
+    {'=', 0xff0000ff, {182, 59}}, {'=', 0xff0000ff, {198, 59}}, {'=', 0xff0000ff, {214, 59}}, {'=', 0xff0000ff, {230, 59}},
+    {'=', 0xff0000ff, {246, 59}}, {'=', 0xff0000ff, {262, 59}}, {'=', 0xff0000ff, {278, 59}}, {'=', 0x000000ff, {150, 69}},
+    {'=', 0x000000ff, {166, 69}}, {'=', 0x000000ff, {182, 69}}, {'=', 0x000000ff, {198, 69}}, {'=', 0x000000ff, {214, 69}},
+    {'=', 0x000000ff, {230, 69}}, {'=', 0x000000ff, {246, 69}}, {'=', 0x000000ff, {262, 69}}, {'=', 0x000000ff, {278, 69}},
+    {'=', 0xff0000ff, {150, 79}}, {'=', 0xff0000ff, {166, 79}}, {'=', 0xff0000ff, {182, 79}}, {'=', 0xff0000ff, {198, 79}},
+    {'=', 0xff0000ff, {214, 79}}, {'=', 0xff0000ff, {230, 79}}, {'=', 0xff0000ff, {246, 79}}, {'=', 0xff0000ff, {262, 79}},
+    {'=', 0xff0000ff, {278, 79}}, {'=', 0x000000ff, {150, 89}}, {'=', 0x000000ff, {166, 89}}, {'=', 0x000000ff, {182, 89}},
+    {'=', 0x000000ff, {198, 89}}, {'=', 0x000000ff, {214, 89}}, {'=', 0x000000ff, {230, 89}}, {'=', 0x000000ff, {246, 89}},
+    {'=', 0x000000ff, {262, 89}}, {'=', 0x000000ff, {278, 89}}, {'=', 0xff0000ff, {150, 99}}, {'=', 0xff0000ff, {166, 99}},
+    {'=', 0xff0000ff, {182, 99}}, {'=', 0xff0000ff, {198, 99}}, {'=', 0xff0000ff, {214, 99}}, {'=', 0xff0000ff, {230, 99}},
+    {'=', 0xff0000ff, {246, 99}}, {'=', 0xff0000ff, {262, 99}}, {'=', 0xff0000ff, {278, 99}}, {'=', 0x000000ff, {150, 109}},
+    {'=', 0x000000ff, {166, 109}}, {'=', 0x000000ff, {182, 109}}, {'=', 0x000000ff, {198, 109}}, {'=', 0x000000ff, {214, 109}},
+    {'=', 0x000000ff, {230, 109}}, {'=', 0x000000ff, {246, 109}}, {'=', 0x000000ff, {262, 109}}, {'=', 0x000000ff, {278, 109}},
+    {'=', 0xff0000ff, {150, 119}}, {'=', 0xff0000ff, {166, 119}}, {'=', 0xff0000ff, {182, 119}}, {'=', 0xff0000ff, {198, 119}},
+    {'=', 0xff0000ff, {214, 119}}, {'=', 0xff0000ff, {230, 119}}, {'=', 0xff0000ff, {246, 119}}, {'=', 0xff0000ff, {262, 119}},
+    {'=', 0xff0000ff, {278, 119}}, {'=', 0x000000ff, {150, 129}}, {'=', 0x000000ff, {166, 129}}, {'=', 0x000000ff, {182, 129}},
+    {'=', 0x000000ff, {198, 129}}, {'=', 0x000000ff, {214, 129}}, {'=', 0x000000ff, {230, 129}}, {'=', 0x000000ff, {246, 129}},
+    {'=', 0x000000ff, {262, 129}}, {'=', 0x000000ff, {278, 129}}, {'=', 0xff0000ff, {150, 139}}, {'=', 0xff0000ff, {166, 139}},
+    {'=', 0xff0000ff, {182, 139}}, {'=', 0xff0000ff, {198, 139}}, {'=', 0xff0000ff, {214, 139}}, {'=', 0xff0000ff, {230, 139}},
+    {'=', 0xff0000ff, {246, 139}}, {'=', 0xff0000ff, {262, 139}}, {'=', 0xff0000ff, {278, 139}}, {'=', 0xff0000ff, {118, 139}},
+    {'=', 0xff0000ff, {102, 139}}, {'=', 0xff0000ff, {86, 139}}, {'=', 0xff0000ff, {70, 139}}, {'=', 0xff0000ff, {54, 139}},
+    {'=', 0xff0000ff, {38, 139}}, {'=', 0xff0000ff, {22, 139}}, {'=', 0xff0000ff, {6, 139}}, {'=', 0x000000ff, {6, 129}},
+    {'=', 0x000000ff, {22, 129}}, {'=', 0x000000ff, {38, 129}}, {'=', 0x000000ff, {54, 129}}, {'=', 0x000000ff, {70, 129}},
+    {'=', 0x000000ff, {86, 129}}, {'=', 0x000000ff, {102, 129}}, {'=', 0x000000ff, {118, 129}}, {'=', 0xff0000ff, {6, 119}},
+    {'=', 0xff0000ff, {22, 119}}, {'=', 0xff0000ff, {38, 119}}, {'=', 0xff0000ff, {54, 119}}, {'=', 0xff0000ff, {70, 119}},
+    {'=', 0xff0000ff, {86, 119}}, {'=', 0xff0000ff, {102, 119}}, {'=', 0xff0000ff, {118, 119}}, {'=', 0x000000ff, {6, 109}},
+    {'=', 0x000000ff, {22, 109}}, {'=', 0x000000ff, {38, 109}}, {'=', 0x000000ff, {54, 109}}, {'=', 0x000000ff, {70, 109}},
+    {'=', 0x000000ff, {86, 109}}, {'=', 0x000000ff, {102, 109}}, {'=', 0x000000ff, {118, 109}}, {'=', 0xff0000ff, {6, 99}},
+    {'=', 0xff0000ff, {22, 99}}, {'=', 0xff0000ff, {38, 99}}, {'=', 0xff0000ff, {54, 99}}, {'=', 0xff0000ff, {70, 99}},
+    {'=', 0xff0000ff, {86, 99}}, {'=', 0xff0000ff, {102, 99}}, {'=', 0xff0000ff, {118, 99}}
+};
+
 //
 //  Main screen
 //
+static i32 midx = -1;
+
 void mainScreen(void)
 {
     if (g_rscale > 1.001f || g_rscale < 0.999f)
         SDL_SetRenderScale(g_renderer, g_rscale, g_rscale);
 
     // render chars
-    asciiRenderCharBuf2D(COLOR_BLACK, 1, g_roffset.x, g_roffset.y);
+    asciiRenderCharBuf2D(COLOR_CLEAR, 1, g_roffset.x, g_roffset.y);
 
     // render box
     if ((g_box || g_inputmode == INPUT_MODE_CHAR || g_inputmode == INPUT_MODE_COLOR) && g_current >= 0)
-        renderHitbox(g_charbuf2D[g_chars[g_current]].xpos - 2.0f + g_roffset.x, g_charbuf2D[g_chars[g_current]].ypos -2.0f + g_roffset.y, 18.0f, 18.0f);
+        renderHitbox(g_charbuf2D[g_chars[g_current]].xpos - 2.0f + g_roffset.x, g_charbuf2D[g_chars[g_current]].ypos - 2.0f + g_roffset.y, 18.0f, 18.0f);
+
+    
+    if (midx > -1)
+        renderHitbox(g_charbuf2D[g_chars[midx]].xpos - 2.0f + g_roffset.x, g_charbuf2D[g_chars[midx]].ypos - 2.0f + g_roffset.y, 18.0f, 18.0f);
 
     // render anchor
     if (g_box || g_inputmode == INPUT_MODE_ANCHOR) {
@@ -45,11 +103,11 @@ void mainScreen(void)
     // render char list
     for (u32 i = 0; i < g_charidx; i++) {
         if (i == g_current)
-            renderRectangleColor(1095.0f, 25.0f + (i * 16.0f), 154.0f, 16.0f, COLOR_D_GRAY);
+            renderRectangleColor((WINDOW_WIDTH * WINDOW_SCALE) - 185.0f, 25.0f + (i * 16.0f) + g_scrollheight, 154.0f, 16.0f, COLOR_M_GRAY);
 
         renderStrColorFmt
         (
-            1100, 30 + (i * 16), 0.125f, COLOR_WHITE, "[%c] X: %4.0f Y: %3.0f",
+            (WINDOW_WIDTH * WINDOW_SCALE) - 180, 30 + (i * 16) + g_scrollheight, 0.125f, COLOR_WHITE, "[%c] X: %4.0f Y: %3.0f",
             g_charbuf2D[g_chars[i]].charID, g_charbuf2D[g_chars[i]].xpos, g_charbuf2D[g_chars[i]].ypos
         );
     }
@@ -67,14 +125,14 @@ void mainScreen(void)
         if (g_inputidx)
             c = g_inputbuf[0];
 
-        renderRectangleColor(25.0f, 675.0f, 96.0f, 16.0f, COLOR_D_GRAY);
+        renderRectangleColor(25.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 45.0f, 96.0f, 16.0f, COLOR_M_GRAY);
         renderStrColorFmt(30, 680, 0.125f, COLOR_WHITE, "EDIT %s: %c", str, c);
     }
 
     // render animation frameinfo
     if (g_numframes > 1) {
-        renderRectangleColor(1160.0f, 675.0f, 90.0f, 16.0f, COLOR_D_GRAY);
-        renderStrColorFmt(1165, 680, 0.125f, COLOR_WHITE, "FRAME %d/%d", g_frameidx, g_numframes);
+        renderRectangleColor((WINDOW_WIDTH * WINDOW_SCALE) - 300.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 40.0f, 90.0f, 16.0f, COLOR_M_GRAY);
+        renderStrColorFmt((WINDOW_WIDTH * WINDOW_SCALE) - 295, (WINDOW_HEIGHT * WINDOW_SCALE) - 35, 0.125f, COLOR_WHITE, "FRAME %d/%d", g_frameidx, g_numframes);
     }
 
     SDL_RenderPresent(g_renderer);
@@ -152,7 +210,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
     if (!loadCharTextures("..\\resources\\ascii\\pressstart\\", 95))
         return SDL_APP_FAILURE;
 
-    loadObject(o_asciiBird, O_ASCII_BIRD_LEN);
+    //loadObject(obj, 195);
     
     SDL_SetRenderScale(g_renderer, WINDOW_SCALE, WINDOW_SCALE);
 
@@ -209,6 +267,35 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
             rAssert(0);
             break;
         }
+    }
+    else if (event->type == SDL_EVENT_MOUSE_WHEEL)
+    {
+        g_scrollheight += event->wheel.y * 16;
+
+        if (g_scrollheight > 0.0f)
+            g_scrollheight = 0.0f;
+
+        if ((i32) g_scrollheight < -((g_charidx * 16) - (WINDOW_HEIGHT * WINDOW_SCALE * 0.7f)))
+            g_scrollheight = (f32) -((g_charidx * 16) - (WINDOW_HEIGHT * WINDOW_SCALE * 0.7f));
+    }
+    else if (event->type == SDL_EVENT_MOUSE_MOTION)
+    {
+        midx = -1;
+
+        for (u32 i = 0; i < g_charidx; i++) {
+            if (g_charbuf2D[g_chars[i]].xpos > (event->motion.x / g_rscale) - g_roffset.x || (g_charbuf2D[g_chars[i]].xpos) + (64.0f * ASCII_RENDER_SCALE) < (event->motion.x / g_rscale) - g_roffset.x)
+                continue;
+
+            if (g_charbuf2D[g_chars[i]].ypos > (event->motion.y / g_rscale) - g_roffset.y || (g_charbuf2D[g_chars[i]].ypos) + (64.0f * ASCII_RENDER_SCALE) < (event->motion.y / g_rscale) - g_roffset.y)
+                continue;
+
+            midx = i;
+        }
+    }
+    else if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+    {
+        if (event->button.button == 1 && midx > -1)
+            g_current = midx;
     }
 
     return SDL_APP_CONTINUE;

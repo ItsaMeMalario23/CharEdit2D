@@ -71,6 +71,7 @@ extern vec2f_t g_roffset;
 
 extern u32 g_frameidx;
 extern u32 g_numframes;
+extern f32 g_scrollheight;
 
 void initInterface(void);
 void loadObject(const ascii2info_t* object, u32 len);
