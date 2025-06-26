@@ -9,6 +9,7 @@
 #define INPUT_MODE_CHAR     1
 #define INPUT_MODE_COLOR    2
 #define INPUT_MODE_ANCHOR   3
+#define INPUT_MODE_SCOLOR   4
 
 #define ANIM_BUF_SIZE       64
 
@@ -37,8 +38,14 @@
 #define INPUT_O         20
 #define INPUT_DOT       21
 #define INPUT_COMMA     22
+#define INPUT_M         23
+#define INPUT_1         24
+#define INPUT_2         25
+#define INPUT_3         26
+#define INPUT_4         27
+#define INPUT_G         28
 
-#define INPUT_MAP_SIZE  23
+#define INPUT_MAP_SIZE  29
 
 typedef struct frame_s frame_t;
 
@@ -49,42 +56,47 @@ struct frame_s {
     u64         bufsize;
 };
 
-extern u32 g_inputmode;
-extern u32 g_inputidx;
+extern u32 gInmode;
+extern u32 gInidx;
 
-extern f32 g_rscale;
+extern f32 gRenderscale;
 
-extern char g_inputbuf[32];
+extern char gInputbuf[32];
 
-extern char2Idx g_chars[ASCII_MAX_2D_CHARS];
-extern char2Idx g_charidx;
-extern char2Idx g_current;
+extern char2Idx gCharbuf[ASCII_MAX_2D_CHARS];
+extern char2Idx gNumchars;
+extern char2Idx gCurrentchar;
 
 extern bool g_iterate;
 extern bool g_shift;
 extern bool g_box;
 extern bool g_alt;
+extern bool mGrid;
 
-extern vec2f_t g_anchor;
-extern vec2f_t g_anchortmp;
-extern vec2f_t g_roffset;
+extern vec2f_t gAnchorpos;
+extern vec2f_t gAnchortmp;
+extern vec2f_t gRenderoffset;
 
-extern u32 g_frameidx;
-extern u32 g_numframes;
-extern f32 g_scrollheight;
+extern u32 gFrameidx;
+extern u32 gNumframes;
+extern f32 gRenderscroll;
+
+extern i32 gEditcol;
+extern u32 gColors[4];
+
+extern bool mMultiselect;
+extern u32 gNumselected;
+extern char2Idx* gMultiselbuf;
 
 void initInterface(void);
 void loadObject(const ascii2info_t* object, u32 len);
 void updateCharBuf(frame_t* restrict frame);
 void updateFrameBuf(frame_t* restrict frame);
+void addCharToSelection(i32 idx);
 
 // Input handlers
 SDL_AppResult stdInputMode(SDL_Keycode input);
 SDL_AppResult txtInputMode(SDL_Keycode input);
 SDL_AppResult anchorInputMode(SDL_Keycode input);
-
-// Local funtions
-char getInputChar(char input);
-void processTxtInput(void);
 
 #endif

@@ -12,43 +12,185 @@ bool g_iterate = 0;
 bool g_shift = 0;
 bool g_box = 0;
 bool g_alt = 0;
+bool mGrid = 0;
 
-f32 g_rscale = WINDOW_SCALE;
-vec2f_t g_roffset = {0.0f, 0.0f};
+f32 gRenderscale = WINDOW_SCALE;
+f32 gRenderscroll = 0.0f;
+vec2f_t gRenderoffset = {0.0f, 0.0f};
 
-u32 g_inputmode = INPUT_MODE_STD;
+u32 gInmode = INPUT_MODE_STD;
 
-char g_inputbuf[32];
-u32 g_inputidx = 0;
+char gInputbuf[32];
+u32 gInidx = 0;
 
-char2Idx g_chars[ASCII_MAX_2D_CHARS];
-char2Idx g_charidx = 0;
-char2Idx g_current = -1;
+char2Idx gCharbuf[ASCII_MAX_2D_CHARS];
+char2Idx gNumchars = 0;
+char2Idx gCurrentchar = -1;
 
-vec2f_t g_anchor = {0.0f, 0.0f};
-vec2f_t g_anchortmp = {0.0f, 0.0f};
+vec2f_t gAnchorpos = {0.0f, 0.0f};
+vec2f_t gAnchortmp = {0.0f, 0.0f};
 
-frame_t g_baseframe;
-frame_t* g_currentframe = &g_baseframe;
-u32 g_frameidx = 1;
-u32 g_numframes = 1;
+frame_t gBaseframe;
+frame_t* gCurrentframe = &gBaseframe;
+u32 gFrameidx = 1;
+u32 gNumframes = 1;
 
-f32 g_scrollheight = 0.0f;
+bool mMultiselect = 0;
+u32 gNumselected = 0;
+static u32 gMultiselbufsize;
+char2Idx* gMultiselbuf = NULL;
+
+i32 gEditcol = -1;
+u32 gColors[4] = {0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff};
 
 static input_f inputMap[INPUT_MAP_SIZE];
+
+//
+//  Local functions
+//
+static const char shiftNums[10] = {'=', '!', '\"', '\\', '$', '%', '&', '/', '(', ')'};
+static const char altNums[10] = {0, 0, 0, 0, '?', 96, '{', '[', ']', '}'};
+
+static char getInputChar(char input)
+{
+    if (g_shift)
+    {
+        if (input > 96 && input < 123)
+            return input - 32;  // to upper
+
+        if (input > 47 && input < 58)
+            return shiftNums[input - 48];
+
+        switch (input) {
+        case ',':
+            return ';';
+        case '.':
+            return ':';
+        case '#':
+            return '\'';
+        case '+':
+            return '*';
+        case '-':
+            return '_';
+        case '<':
+            return '>';
+        }
+
+        return 0;
+    }
+    else if (g_alt)
+    {
+        if (input > 47 && input < 58)
+            return altNums[input - 48];
+
+        switch (input) {
+        case 'q':
+            return '@';
+        case '<':
+            return '|';
+        case '+':
+            return '~';
+        }
+
+        return 0;
+    }
+    else
+    {
+        return input;
+    }
+}
+
+static void setCharColor(u32 color)
+{
+    rAssert(color);
+
+    if (mMultiselect)
+    {
+        for (u32 i = 0; i < gNumselected; i++) {
+            if (gCharbuf[i] >= 0)
+                g_charbuf2D[gCharbuf[gMultiselbuf[i]]].color = color;
+        }
+    }
+    else
+    {
+        if (gCurrentchar < 0)
+            return;
+
+        g_charbuf2D[gCharbuf[gCurrentchar]].color = color;
+    }
+}
+
+static void processTxtInput(void)
+{
+    rAssert(gInmode == INPUT_MODE_CHAR || gInmode == INPUT_MODE_COLOR || gInmode == INPUT_MODE_SCOLOR);
+    rAssert(gInidx <= 32);
+    
+    if (!gInidx || gInputbuf[0] < 32 || (gCurrentchar < 0 && gInmode != INPUT_MODE_SCOLOR))
+        return;
+
+    if (gInmode == INPUT_MODE_CHAR)
+    {
+        g_charbuf2D[gCharbuf[gCurrentchar]].charID = gInputbuf[0];
+    }
+    else if (gInmode == INPUT_MODE_COLOR)
+    {
+        u32 color = 0x000000ff;
+
+        switch (gInputbuf[0]) {
+        case 'w':
+            color = COLOR_WHITE;
+            break;
+        case 'r':
+            color = COLOR_RED;
+            break;
+        case 'g':
+            color = COLOR_L_GREEN;
+            break;
+        case 'b':
+            color = COLOR_BLUE;
+            break;
+        case 'y':
+            color = COLOR_YELLOW;
+            break;
+        case 'a':
+            color = COLOR_GOLD;
+            break;
+        case 'o':
+            color = COLOR_D_GREEN;
+            break;
+        }
+
+        if (color != 0x000000ff)
+            setCharColor(color);
+    }
+    else if (gInmode == INPUT_MODE_SCOLOR)
+    {
+        if (gInidx != 6 || gEditcol < 0) {
+            SDL_Log("Inidx %d edtc %d", gInidx, gEditcol);
+            return;
+        }
+
+        gInputbuf[6] = '\0';
+
+        u32 tmp = strtoul(gInputbuf, NULL, 16);
+
+        gColors[gEditcol] = (tmp << 8) | 0xff;
+        gEditcol = -1;
+    }
+}
 
 //
 //  Std input callbacks
 //
 static void addCharCallback(void)
 {
-    if (g_charidx >= ASCII_MAX_2D_CHARS) {
+    if (gNumchars >= ASCII_MAX_2D_CHARS) {
         SDL_Log("Failed to add char, buffer full");
         return;
     }
     
-    f32 x = g_current < 0 ? 10.0f : g_charbuf2D[g_chars[g_current]].xpos + 16.0f;
-    f32 y = g_current < 0 ? 10.0f : g_charbuf2D[g_chars[g_current]].ypos;
+    f32 x = gCurrentchar < 0 ? 10.0f : g_charbuf2D[gCharbuf[gCurrentchar]].xpos + 16.0f;
+    f32 y = gCurrentchar < 0 ? 10.0f : g_charbuf2D[gCharbuf[gCurrentchar]].ypos;
 
     char2Idx i = asciiChar2D(x, y, COLOR_WHITE, '=');
 
@@ -57,65 +199,93 @@ static void addCharCallback(void)
         return;
     }
 
-    g_current = g_charidx;
-    g_chars[g_charidx++] = i;
+    gCurrentchar = gNumchars;
+    gCharbuf[gNumchars++] = i;
 }
 
 static void mvUpCallback(void)
 {
-    if (g_charbuf2D && g_current >= 0)
-        g_charbuf2D[g_chars[g_current]].ypos -= g_shift ? SHIFT_ACCEL : 1.0f;
+    if (g_charbuf2D && !mMultiselect && gCurrentchar >= 0) {
+        g_charbuf2D[gCharbuf[gCurrentchar]].ypos -= g_shift ? SHIFT_ACCEL : 1.0f;
+        return;
+    }
+
+    for (u32 i = 0; i < gNumselected; i++) {
+        if (gCharbuf[i] >= 0)
+            g_charbuf2D[gCharbuf[gMultiselbuf[i]]].ypos -= g_shift ? SHIFT_ACCEL : 1.0f;
+    }
 }
 
 static void mvLeftCallback(void)
 {
-    if (g_charbuf2D && g_current >= 0)
-        g_charbuf2D[g_chars[g_current]].xpos -= g_shift ? SHIFT_ACCEL : 1.0f;
+    if (g_charbuf2D && !mMultiselect && gCurrentchar >= 0) {
+        g_charbuf2D[gCharbuf[gCurrentchar]].xpos -= g_shift ? SHIFT_ACCEL : 1.0f;
+        return;
+    }
+
+    for (u32 i = 0; i < gNumselected; i++) {
+        if (gCharbuf[i] >= 0)
+            g_charbuf2D[gCharbuf[gMultiselbuf[i]]].xpos -= g_shift ? SHIFT_ACCEL : 1.0f;
+    }
 }
 
 static void mvDownCallback(void)
 {
-    if (g_charbuf2D && g_current >= 0)
-        g_charbuf2D[g_chars[g_current]].ypos += g_shift ? SHIFT_ACCEL : 1.0f;
+    if (g_charbuf2D && !mMultiselect && gCurrentchar >= 0) {
+        g_charbuf2D[gCharbuf[gCurrentchar]].ypos += g_shift ? SHIFT_ACCEL : 1.0f;
+        return;
+    }
+
+    for (u32 i = 0; i < gNumselected; i++) {
+        if (gCharbuf[i] >= 0)
+            g_charbuf2D[gCharbuf[gMultiselbuf[i]]].ypos += g_shift ? SHIFT_ACCEL : 1.0f;
+    }
 }
 
 static void mvRightCallback(void)
 {
-    if (g_charbuf2D && g_current >= 0)
-        g_charbuf2D[g_chars[g_current]].xpos += g_shift ? SHIFT_ACCEL : 1.0f;
+    if (g_charbuf2D && !mMultiselect && gCurrentchar >= 0) {
+        g_charbuf2D[gCharbuf[gCurrentchar]].xpos += g_shift ? SHIFT_ACCEL : 1.0f;
+        return;
+    }
+
+    for (u32 i = 0; i < gNumselected; i++) {
+        if (gCharbuf[i] >= 0)
+            g_charbuf2D[gCharbuf[gMultiselbuf[i]]].xpos += g_shift ? SHIFT_ACCEL : 1.0f;
+    }
 }
 
 static void chColorCallback(void)
 {
-    g_inputmode = INPUT_MODE_COLOR;
+    gInmode = INPUT_MODE_COLOR;
 }
 
 static void chCharCallback(void)
 {
-    g_inputmode = INPUT_MODE_CHAR;
+    gInmode = INPUT_MODE_CHAR;
 }
 
 static void charUpCallback(void)
 {
-    if (g_current > 0)
-        g_current--;
+    if (gCurrentchar > 0)
+        gCurrentchar--;
 }
 
 static void charDownCallback(void)
 {
-    if (g_current >= 0 && g_current + 1 < g_charidx)
-        g_current++;
+    if (gCurrentchar >= 0 && gCurrentchar + 1 < gNumchars)
+        gCurrentchar++;
 }
 
 static void charUpWrapCallback(void)
 {
-    if (g_current >= 0 && ++g_current >= g_charidx)
-        g_current = 0;
+    if (gCurrentchar >= 0 && ++gCurrentchar >= gNumchars)
+        gCurrentchar = 0;
 }
 
 static void createStructCallback(void)
 {
-    if (!g_charidx)
+    if (!gNumchars)
         return;
 
     char buf[256];
@@ -123,18 +293,18 @@ static void createStructCallback(void)
     u32 idx = 0;
     u32 chr = 0;
 
-    snprintf(buf, 256, "\nconst ascii2info_t obj[%d] = {", g_charidx);
+    snprintf(buf, 256, "\nconst ascii2info_t obj[%d] = {", gNumchars);
     SDL_Log(buf);
 
     buf[0] = '\t';
     idx = 1;
 
     for (;;) {
-        asc = g_charbuf2D + g_chars[chr];
+        asc = g_charbuf2D + gCharbuf[chr];
 
-        idx += snprintf(buf + idx, 256 - idx, "{\'%c\', 0x%x, {%.0f, %.0f}}, ", asc->charID, asc->color, asc->xpos - g_anchor.x, asc->ypos - g_anchor.y);
+        idx += snprintf(buf + idx, 256 - idx, "{\'%c\', 0x%x, {%.0f, %.0f}}, ", asc->charID, asc->color, asc->xpos - gAnchorpos.x, asc->ypos - gAnchorpos.y);
 
-        if (++chr >= g_charidx) {
+        if (++chr >= gNumchars) {
             SDL_Log(buf);
             break;
         }
@@ -151,7 +321,7 @@ static void createStructCallback(void)
 
 static void createStructShaderCompatibility(void)
 {
-    if (!g_charidx)
+    if (!gNumchars)
         return;
 
     char buf[256];
@@ -159,14 +329,14 @@ static void createStructShaderCompatibility(void)
     u32 idx = 0;
     u32 chr = 0;
 
-    snprintf(buf, 256, "\nconst ascii2info_t obj[%d] = {", g_charidx);
+    snprintf(buf, 256, "\nconst ascii2info_t obj[%d] = {", gNumchars);
     SDL_Log(buf);
 
     buf[0] = '\t';
     idx = 1;
 
     for (;;) {
-        asc = g_charbuf2D + g_chars[chr];
+        asc = g_charbuf2D + gCharbuf[chr];
 
         idx += snprintf
         (
@@ -174,11 +344,11 @@ static void createStructShaderCompatibility(void)
             "{\'%c\', 0x%x, {%.7ff, %.7ff}}, ",
             asc->charID,
             asc->color | 0x000000ff,
-            (asc->xpos - g_anchor.x) / 640.0f,
-            -((asc->ypos - g_anchor.y + (64.0f * ASCII_RENDER_SCALE)) / 360.0f)
+            (asc->xpos - gAnchorpos.x) / 640.0f,
+            -((asc->ypos - gAnchorpos.y + (64.0f * ASCII_RENDER_SCALE)) / 360.0f)
         );
 
-        if (++chr >= g_charidx) {
+        if (++chr >= gNumchars) {
             SDL_Log(buf);
             break;
         }
@@ -200,84 +370,145 @@ static void toggleBoxCallback(void)
 
 static void editAnchorCallback(void)
 {
-    g_inputmode = INPUT_MODE_ANCHOR;
+    gInmode = INPUT_MODE_ANCHOR;
 }
 
 static void zoomInCallback(void)
 {
-    if (g_rscale < 2.8f)
-        g_rscale += 0.25f;
+    if (gRenderscale < 2.8f)
+        gRenderscale += 0.25f;
 }
 
 static void zoomOutCallback(void)
 {
-    if (g_rscale > 0.4f)
-        g_rscale -= 0.25f;
+    if (gRenderscale > 0.4f)
+        gRenderscale -= 0.25f;
 }
 
 static void scrUpCallback(void)
 {
-    g_roffset.y += g_shift ? roundf(SHIFT_ACCEL * g_rscale) : 1.0f;
+    gRenderoffset.y += g_shift ? roundf(SHIFT_ACCEL * gRenderscale) : 1.0f;
 }
 
 static void scrLeftCallback(void)
 {
-    g_roffset.x += g_shift ? roundf(SHIFT_ACCEL * g_rscale) : 1.0f;
+    gRenderoffset.x += g_shift ? roundf(SHIFT_ACCEL * gRenderscale) : 1.0f;
 }
 
 static void scrDownCallback(void)
 {
-    g_roffset.y -= g_shift ? roundf(SHIFT_ACCEL * g_rscale) : 1.0f;
+    gRenderoffset.y -= g_shift ? roundf(SHIFT_ACCEL * gRenderscale) : 1.0f;
 }
 
 static void scrRightCallback(void)
 {
-    g_roffset.x -= g_shift ? roundf(SHIFT_ACCEL * g_rscale) : 1.0f;
+    gRenderoffset.x -= g_shift ? roundf(SHIFT_ACCEL * gRenderscale) : 1.0f;
 }
 
 static void addFrameCallback(void)
 {    
-    rAssert(g_currentframe);
+    rAssert(gCurrentframe);
 
     frame_t* tmp = (frame_t*) memAlloc(sizeof(frame_t));
 
-    *tmp = (frame_t) { .bufsize = ANIM_BUF_SIZE, .positions = NULL, .prev = g_currentframe, .next = g_currentframe->next };
+    *tmp = (frame_t) { .bufsize = ANIM_BUF_SIZE, .positions = NULL, .prev = gCurrentframe, .next = gCurrentframe->next };
 
-    updateFrameBuf(g_currentframe);
+    updateFrameBuf(gCurrentframe);
     updateFrameBuf(tmp);
 
-    g_currentframe->next = tmp;
-    g_currentframe = tmp;
-    g_numframes++;
-    g_frameidx++;
+    gCurrentframe->next = tmp;
+    gCurrentframe = tmp;
+    gNumframes++;
+    gFrameidx++;
 }
 
 static void frameStepForward(void)
 {
-    if (g_currentframe && g_currentframe->next) {
-        updateFrameBuf(g_currentframe);
-        updateCharBuf(g_currentframe->next);
-        g_currentframe = g_currentframe->next;
-        g_frameidx++;
+    if (gCurrentframe && gCurrentframe->next) {
+        updateFrameBuf(gCurrentframe);
+        updateCharBuf(gCurrentframe->next);
+        gCurrentframe = gCurrentframe->next;
+        gFrameidx++;
     }
 }
 
 static void frameStepBackward(void)
 {
-    if (g_currentframe && g_currentframe->prev) {
-        updateFrameBuf(g_currentframe);
-        updateCharBuf(g_currentframe->prev);
-        g_currentframe = g_currentframe->prev;
-        g_frameidx--;
+    if (gCurrentframe && gCurrentframe->prev) {
+        updateFrameBuf(gCurrentframe);
+        updateCharBuf(gCurrentframe->prev);
+        gCurrentframe = gCurrentframe->prev;
+        gFrameidx--;
     }
 }
+
+static void toggleMultiselect(void)
+{
+    rAssert(gMultiselbuf);
+
+    mMultiselect = !mMultiselect;
+    gNumselected = 0;
+}
+
+static void color1(void)
+{
+    if (g_shift) {
+        gInmode = INPUT_MODE_SCOLOR;
+        gEditcol = 0;
+        return;
+    }
+
+    setCharColor(gColors[0]);
+}
+
+static void color2(void)
+{
+    if (g_shift) {
+        gInmode = INPUT_MODE_SCOLOR;
+        gEditcol = 1;
+        return;
+    }
+
+    setCharColor(gColors[1]);
+}
+
+static void color3(void)
+{
+    if (g_shift) {
+        gInmode = INPUT_MODE_SCOLOR;
+        gEditcol = 2;
+        return;
+    }
+
+    setCharColor(gColors[2]);
+}
+
+static void color4(void)
+{
+    if (g_shift) {
+        gInmode = INPUT_MODE_SCOLOR;
+        gEditcol = 3;
+        return;
+    }
+
+    setCharColor(gColors[3]);
+}
+
+static void toggleGrid(void)
+{
+    mGrid = !mGrid;
+}
+
+//
+//  Public functions
+//
 
 void initInterface(void)
 {
     for (u32 i = 0; i < ASCII_MAX_2D_CHARS; i++)
-        g_chars[i] = -1;
+        gCharbuf[i] = -1;
 
-    memset(g_inputbuf, 0, sizeof(g_inputbuf));
+    memset(gInputbuf, 0, sizeof(gInputbuf));
     memset(inputMap, 0, sizeof(inputMap));
 
     // keyboard mapping
@@ -304,10 +535,20 @@ void initInterface(void)
     inputMap[INPUT_O] = addFrameCallback;
     inputMap[INPUT_DOT] = frameStepForward;
     inputMap[INPUT_COMMA] = frameStepBackward;
+    inputMap[INPUT_M] = toggleMultiselect;
+    inputMap[INPUT_1] = color1;
+    inputMap[INPUT_2] = color2;
+    inputMap[INPUT_3] = color3;
+    inputMap[INPUT_4] = color4;
+    inputMap[INPUT_G] = toggleGrid;
 
     vec2f_t* tmp = (vec2f_t*) memAllocInit(sizeof(vec2f_t), ANIM_BUF_SIZE);
 
-    g_baseframe = (frame_t) { .next = NULL, .prev = NULL, .positions = tmp, .bufsize = ANIM_BUF_SIZE };
+    gBaseframe = (frame_t) { .next = NULL, .prev = NULL, .positions = tmp, .bufsize = ANIM_BUF_SIZE };
+
+    gNumselected = 0;
+    gMultiselbufsize = 128;
+    gMultiselbuf = (char2Idx*) memAlloc(sizeof(char2Idx) * gMultiselbufsize);
 }
 
 void loadObject(const ascii2info_t* object, u32 len)
@@ -315,7 +556,7 @@ void loadObject(const ascii2info_t* object, u32 len)
     rAssert(object);
     rAssert(len);
     
-    if (g_charidx + len > ASCII_MAX_2D_CHARS) {
+    if (gNumchars + len > ASCII_MAX_2D_CHARS) {
         SDL_Log("Failed to load object, insufficient buf size");
         return;
     }
@@ -323,29 +564,29 @@ void loadObject(const ascii2info_t* object, u32 len)
     charIdx idx;
 
     for (u32 i = 0; i < len; i++) {
-        //idx = asciiChar2D(object[i].pos.x * 640.0f, -((object[i].pos.y * 360.0f) - (64.0f * ASCII_RENDER_SCALE)), object[i].color, object[i].charID);
-        idx = asciiChar2D(object[i].pos.x, object[i].pos.y, object[i].color, object[i].charID);
+        idx = asciiChar2D(object[i].pos.x * 640.0f, -((object[i].pos.y * 360.0f) - (64.0f * ASCII_RENDER_SCALE)), object[i].color, object[i].charID);
+        //idx = asciiChar2D(object[i].pos.x, object[i].pos.y, object[i].color, object[i].charID);
 
         if (idx < 0) {
             SDL_Log("ERROR: create ascii char returned invalid index while loading object, aborting");
             return;
         }
 
-        g_chars[g_charidx++] = idx;
+        gCharbuf[gNumchars++] = idx;
     }
 
-    g_current = g_chars[g_charidx - 1];
+    gCurrentchar = gCharbuf[gNumchars - 1];
 }
 
 void updateCharBuf(frame_t* restrict frame)
 {
     rAssert(frame);
     rAssert(frame->positions);
-    rAssert(frame->bufsize > g_charidx);
+    rAssert(frame->bufsize > gNumchars);
 
-    for (u32 i = 0; i < g_charidx; i++) {
-        g_charbuf2D[g_chars[i]].xpos = frame->positions[i].x;
-        g_charbuf2D[g_chars[i]].ypos = frame->positions[i].y;
+    for (u32 i = 0; i < gNumchars; i++) {
+        g_charbuf2D[gCharbuf[i]].xpos = frame->positions[i].x;
+        g_charbuf2D[gCharbuf[i]].ypos = frame->positions[i].y;
     }
 }
 
@@ -355,7 +596,7 @@ void updateFrameBuf(frame_t* restrict frame)
 
     u64 size = frame->bufsize;
 
-    while (size <= g_charidx)
+    while (size <= gNumchars)
         size += 32;
 
     rAssert(size < 1024);
@@ -371,15 +612,127 @@ void updateFrameBuf(frame_t* restrict frame)
         frame->bufsize = size;
     }
 
-    for (u32 i = 0; i < g_charidx; i++) {
-        frame->positions[i].x = g_charbuf2D[g_chars[i]].xpos;
-        frame->positions[i].y = g_charbuf2D[g_chars[i]].ypos;
+    for (u32 i = 0; i < gNumchars; i++) {
+        frame->positions[i].x = g_charbuf2D[gCharbuf[i]].xpos;
+        frame->positions[i].y = g_charbuf2D[gCharbuf[i]].ypos;
     }
+}
+
+void addCharToSelection(i32 idx)
+{
+    rAssert(gMultiselbuf);
+    
+    if (idx < 0) {
+        SDL_Log("[ERROR] Failed to add char to selection, invalid id");
+        return;
+    }
+
+    if (gNumselected >= gMultiselbufsize)
+        gMultiselbuf = (char2Idx*) memRealloc(gMultiselbuf, (gMultiselbufsize += 128));
+
+    // remove if exists
+    for (u32 i = 0; i < gNumselected; i++) {
+        if (gMultiselbuf[i] == idx) {
+            if (i == gNumselected - 1) {
+                gNumselected--;
+                return;
+            }
+
+            memmove(gMultiselbuf + i, gMultiselbuf + i + 1, sizeof(char2Idx) * (gNumselected + i));
+            gNumselected--;
+            return;
+        }
+    }
+
+    // add if not exists
+    gMultiselbuf[gNumselected++] = idx;
 }
 
 //
 //  Input handler functions
 //
+
+SDL_AppResult txtInputMode(SDL_Keycode input)
+{
+    if (input == SDLK_RETURN) {
+        processTxtInput();
+
+        gInmode = INPUT_MODE_STD;
+        gInidx = 0;
+
+        return SDL_APP_CONTINUE;
+    }
+
+    if (input == SDLK_ESCAPE) {
+        gInmode = INPUT_MODE_STD;
+        gInidx = 0;
+
+        return SDL_APP_CONTINUE;
+    }
+
+    if (input == SDLK_BACKSPACE)     // backspace
+    {
+        if (gInidx)
+            gInidx--;
+
+        return SDL_APP_CONTINUE;
+    }
+    else if (input < 32 && input > 127)     // ignore
+    {
+        return SDL_APP_CONTINUE;
+    }
+
+    char c = getInputChar(input);
+
+    if (!c)
+        return SDL_APP_CONTINUE;
+
+    if (gInmode == INPUT_MODE_CHAR || gInmode == INPUT_MODE_COLOR) {
+        // single char input mode
+        gInputbuf[0] = c;
+        gInidx = 1;
+    } else if (gInidx < 32) {
+        // multi char input
+        gInputbuf[gInidx++] = c;
+    }
+
+    return SDL_APP_CONTINUE;
+}
+
+SDL_AppResult anchorInputMode(SDL_Keycode input)
+{
+    switch (input) {
+    case SDLK_RETURN:
+        gAnchorpos.x += gAnchortmp.x;
+        gAnchorpos.y += gAnchortmp.y;
+        // intentional falltrough
+    case SDLK_ESCAPE:
+    case SDLK_R:
+        gInmode = INPUT_MODE_STD;
+        gAnchortmp.x = 0.0f;
+        gAnchortmp.y = 0.0f;
+        break;
+
+    case SDLK_W:
+        gAnchortmp.y -= g_shift ? SHIFT_ACCEL : 1.0f;
+        break;
+
+    case SDLK_A:
+        gAnchortmp.x -= g_shift ? SHIFT_ACCEL : 1.0f;
+        break;
+
+    case SDLK_S:
+        gAnchortmp.y += g_shift ? SHIFT_ACCEL : 1.0f;
+        break;
+
+    case SDLK_D:
+        gAnchortmp.x += g_shift ? SHIFT_ACCEL : 1.0f;
+        break;
+    }
+
+    return SDL_APP_CONTINUE;
+}
+
 SDL_AppResult stdInputMode(SDL_Keycode input)
 {
     switch (input) {
@@ -492,190 +845,46 @@ SDL_AppResult stdInputMode(SDL_Keycode input)
             inputMap[INPUT_O]();
         break;
 
-    case SDLK_M:
     case SDLK_COLON:
         if (inputMap[INPUT_DOT])
             inputMap[INPUT_DOT]();
         break;
 
-    case SDLK_N:
     case SDLK_COMMA:
         if (inputMap[INPUT_COMMA])
             inputMap[INPUT_COMMA]();
         break;
-    }
 
-    return SDL_APP_CONTINUE;
-}
-
-SDL_AppResult txtInputMode(SDL_Keycode input)
-{
-    if (input == SDLK_RETURN) {
-        processTxtInput();
-
-        g_inputmode = INPUT_MODE_STD;
-        g_inputidx = 0;
-
-        return SDL_APP_CONTINUE;
-    }
-
-    if (input == SDLK_ESCAPE) {
-        g_inputmode = INPUT_MODE_STD;
-        g_inputidx = 0;
-
-        return SDL_APP_CONTINUE;
-    }
-
-    if (input < 32 && input > 127)
-        return SDL_APP_CONTINUE;
-
-    char c = getInputChar(input);
-
-    if (!c)
-        return SDL_APP_CONTINUE;
-
-    if (g_inputmode == INPUT_MODE_CHAR || g_inputmode == INPUT_MODE_COLOR) {
-        // single char input mode
-        g_inputbuf[0] = c;
-        g_inputidx = 1;
-    } else if (g_inputidx < 32) {
-        // multi char input
-        g_inputbuf[g_inputidx++] = c;
-    }
-
-    return SDL_APP_CONTINUE;
-}
-
-SDL_AppResult anchorInputMode(SDL_Keycode input)
-{
-    switch (input) {
-    case SDLK_RETURN:
-        g_anchor.x += g_anchortmp.x;
-        g_anchor.y += g_anchortmp.y;
-        // intentional falltrough
-    case SDLK_ESCAPE:
-    case SDLK_R:
-        g_inputmode = INPUT_MODE_STD;
-        g_anchortmp.x = 0.0f;
-        g_anchortmp.y = 0.0f;
+    case SDLK_M:
+        if (inputMap[INPUT_M])
+            inputMap[INPUT_M]();
         break;
 
-    case SDLK_W:
-        g_anchortmp.y -= g_shift ? SHIFT_ACCEL : 1.0f;
+    case SDLK_1:
+        if (inputMap[INPUT_1])
+            inputMap[INPUT_1]();
         break;
 
-    case SDLK_A:
-        g_anchortmp.x -= g_shift ? SHIFT_ACCEL : 1.0f;
+    case SDLK_2:
+        if (inputMap[INPUT_2])
+            inputMap[INPUT_2]();
         break;
 
-    case SDLK_S:
-        g_anchortmp.y += g_shift ? SHIFT_ACCEL : 1.0f;
+    case SDLK_3:
+        if (inputMap[INPUT_3])
+            inputMap[INPUT_3]();
         break;
 
-    case SDLK_D:
-        g_anchortmp.x += g_shift ? SHIFT_ACCEL : 1.0f;
+    case SDLK_4:
+        if (inputMap[INPUT_4])
+            inputMap[INPUT_4]();
+        break;
+
+    case SDLK_G:
+        if (inputMap[INPUT_G])
+            inputMap[INPUT_G]();
         break;
     }
 
     return SDL_APP_CONTINUE;
-}
-
-//
-//  Local functions
-//
-const char shiftNums[10] = {'=', '!', '\"', '\\', '$', '%', '&', '/', '(', ')'};
-const char altNums[10] = {0, 0, 0, 0, 0, 0, '{', '[', ']', '}'};
-
-char getInputChar(char input)
-{
-    if (g_shift)
-    {
-        if (input > 96 && input < 123)
-            return input - 32;  // to upper
-
-        if (input > 47 && input < 58)
-            return shiftNums[input - 48];
-
-        switch (input) {
-        case ',':
-            return ';';
-        case '.':
-            return ':';
-        case '#':
-            return '\'';
-        case '+':
-            return '*';
-        case '-':
-            return '_';
-        case '<':
-            return '>';
-        }
-
-        return 0;
-    }
-    else if (g_alt)
-    {
-        if (input > 47 && input < 58)
-            return altNums[input - 48];
-
-        switch (input) {
-        case 'q':
-            return '@';
-        case '<':
-            return '|';
-        case '+':
-            return '~';
-        }
-
-        return 0;
-    }
-    else
-    {
-        return input;
-    }
-}
-
-void processTxtInput(void)
-{
-    rAssert(g_inputmode == INPUT_MODE_CHAR || g_inputmode == INPUT_MODE_COLOR);
-    rAssert(g_inputidx <= 32);
-    
-    if (!g_inputidx || g_inputbuf[0] < 32 || g_current < 0)
-        return;
-
-    if (g_inputmode == INPUT_MODE_CHAR)
-    {
-        g_charbuf2D[g_chars[g_current]].charID = g_inputbuf[0];
-    }
-    else
-    {
-        u32 color = 0x000000ff;
-
-        switch (g_inputbuf[0]) {
-        case 'w':
-            color = COLOR_WHITE;
-            break;
-        case 'r':
-            color = COLOR_RED;
-            break;
-        case 'g':
-            color = COLOR_L_GREEN;
-            break;
-        case 'b':
-            color = COLOR_BLUE;
-            break;
-        case 'y':
-            color = COLOR_YELLOW;
-            break;
-        case 'a':
-            color = COLOR_GOLD;
-            break;
-        case 'o':
-            color = COLOR_D_GREEN;
-            break;
-        }
-
-        if (color != 0x000000ff)
-            g_charbuf2D[g_chars[g_current]].color = color;
-    }
 }

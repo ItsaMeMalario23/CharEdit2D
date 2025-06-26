@@ -13,6 +13,8 @@
 
 #define EPSILON         (0.0001f)
 
+#define GRID_SIZE       77
+
 typedef signed char i8;
 typedef unsigned char u8;
 

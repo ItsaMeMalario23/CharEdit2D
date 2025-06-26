@@ -71,6 +71,48 @@ static const ascii2info_t obj[195] = {
     {'=', 0xff0000ff, {86, 99}}, {'=', 0xff0000ff, {102, 99}}, {'=', 0xff0000ff, {118, 99}}
 };
 
+const ascii2info_t brickdata[55] = {
+    {'=', 0x66502aff, {0.0000000f, 0.1305556f}}, {'\'', 0x000000ff, {0.0187500f, 0.1194444f}}, {'=', 0x66502aff, {0.0359375f, 0.1305556f}}, {'=', 0x66502aff, {0.0609375f, 0.1305556f}},
+    {'\'', 0x000000ff, {0.0796875f, 0.1194444f}}, {'=', 0x66502aff, {0.0968750f, 0.1305556f}}, {'\'', 0x000000ff, {-0.0062500f, 0.0861111f}}, {'=', 0x66502aff, {0.0109375f, 0.0972222f}},
+    {'=', 0x66502aff, {0.0359375f, 0.0972222f}}, {'\'', 0x000000ff, {0.0546875f, 0.0861111f}}, {'=', 0x66502aff, {0.0718750f, 0.0972222f}}, {'=', 0x66502aff, {0.0968750f, 0.0972222f}},
+    {'_', 0x000000ff, {0.0000000f, 0.1361111f}}, {'_', 0x000000ff, {0.0250000f, 0.1361111f}}, {'-', 0x000000ff, {0.0468750f, 0.1138889f}}, {'_', 0x000000ff, {0.0718750f, 0.1361111f}},
+    {'_', 0x000000ff, {0.0968750f, 0.1361111f}}, {'_', 0x000000ff, {0.0000000f, 0.1027778f}}, {'_', 0x000000ff, {0.0250000f, 0.1027778f}}, {'-', 0x000000ff, {0.0468750f, 0.0805556f}},
+    {'_', 0x000000ff, {0.0718750f, 0.1027778f}}, {'_', 0x000000ff, {0.0968750f, 0.1027778f}}, {'=', 0x66502aff, {0.0000000f, 0.0638889f}}, {'=', 0x66502aff, {0.0359375f, 0.0638889f}},
+    {'=', 0x66502aff, {0.0609375f, 0.0638889f}}, {'=', 0x66502aff, {0.0968750f, 0.0638889f}}, {'\'', 0x000000ff, {0.0187500f, 0.0527778f}}, {'\'', 0x000000ff, {0.0796875f, 0.0527778f}},
+    {'_', 0x000000ff, {0.0000000f, 0.0694444f}}, {'_', 0x000000ff, {0.0250000f, 0.0694444f}}, {'_', 0x000000ff, {0.0718750f, 0.0694444f}}, {'_', 0x000000ff, {0.0968750f, 0.0694444f}},
+    {'-', 0x000000ff, {0.0468750f, 0.0472222f}}, {'=', 0x66502aff, {0.0109375f, 0.0305556f}}, {'=', 0x66502aff, {0.0359375f, 0.0305556f}}, {'=', 0x66502aff, {0.0718750f, 0.0305556f}},
+    {'=', 0x66502aff, {0.0968750f, 0.0305556f}}, {'\'', 0x000000ff, {0.0546875f, 0.0194444f}}, {'\'', 0x000000ff, {-0.0062500f, 0.0194444f}}, {'_', 0x000000ff, {0.0000000f, 0.0361111f}},
+    {'_', 0x000000ff, {0.0250000f, 0.0361111f}}, {'_', 0x000000ff, {0.0718750f, 0.0361111f}}, {'_', 0x000000ff, {0.0968750f, 0.0361111f}}, {'-', 0x000000ff, {0.0468750f, 0.0138889f}},
+    {'=', 0x66502aff, {0.0000000f, -0.0055556f}}, {'=', 0x66502aff, {0.0359375f, -0.0055556f}}, {'=', 0x66502aff, {0.0609375f, -0.0055556f}}, {'=', 0x66502aff, {0.0968750f, -0.0055556f}},
+    {'\'', 0x000000ff, {0.0187500f, -0.0166667f}}, {'\'', 0x000000ff, {0.0796875f, -0.0166667f}}, {'_', 0x000000ff, {0.0000000f, -0.0000000f}}, {'_', 0x000000ff, {0.0250000f, -0.0000000f}},
+    {'_', 0x000000ff, {0.0718750f, -0.0000000f}}, {'_', 0x000000ff, {0.0968750f, -0.0000000f}}, {'-', 0x000000ff, {0.0468750f, -0.0222222f}},
+};
+
+const ascii2info_t mariodata[49] = {
+    {'c', 0xff0000ff, {0.0062500f, 0.2305555f}}, {'o', 0xff0000ff, {0.0546875f, 0.2305555f}}, {'=', 0xff0000ff, {0.0312500f, 0.2194444f}}, {'-', 0xff0000ff, {0.0750000f, 0.2138889f}},
+    {'-', 0xff0000ff, {0.0296875f, 0.2361111f}}, {'\'', 0xffffffff, {0.0593750f, 0.1805556f}}, {'T', 0xffff, {0.0156250f, 0.1861111f}}, {'[', 0xffff, {-0.0062500f, 0.1861111f}},
+    {'e', 0xffff, {0.0078125f, 0.1500000f}}, {'~', 0xffff, {0.0718750f, 0.1555556f}}, {'-', 0xffff, {0.0562500f, 0.1472222f}}, {',', 0xfcd303ff, {0.0734375f, 0.1944444f}},
+    {'.', 0xfcd303ff, {0.0718750f, 0.2138889f}}, {'K', 0xfcd303ff, {0.0359375f, 0.1472222f}}, {'-', 0xfcd303ff, {0.0562500f, 0.1361111f}}, {'$', 0xfcd303ff, {0.0390625f, 0.1888889f}},
+    {'\'', 0xfcd303ff, {0.0078125f, 0.1722222f}}, {',', 0xfcd303ff, {0.0578125f, 0.1805556f}}, {'|', 0xff0000ff, {0.0140625f, 0.1027778f}}, {'|', 0xff0000ff, {0.0484375f, 0.1027778f}},
+    {'A', 0xff0000ff, {0.0156250f, 0.0611111f}}, {'A', 0xff0000ff, {0.0500000f, 0.0611111f}}, {'|', 0xff0000ff, {0.0312500f, 0.0611111f}}, {'/', 0xff0000ff, {0.0203125f, 0.0166667f}},
+    {'\\', 0xff0000ff, {0.0453125f, 0.0166667f}}, {'o', 0xffff, {-0.0046875f, -0.0055556f}}, {'o', 0xffff, {0.0718750f, -0.0055556f}}, {'\'', 0xffff, {0.0125000f, -0.0250000f}},
+    {'\'', 0xffff, {0.0578125f, -0.0250000f}}, {'M', 0xffff, {0.0328125f, 0.1027778f}}, {'R', 0xfcd303ff, {0.0750000f, 0.0638889f}}, {'R', 0xfcd303ff, {-0.0093750f, 0.0638889f}},
+    {'/', 0xffff, {-0.0046875f, 0.1083333f}}, {'\\', 0xffff, {0.0687500f, 0.1083333f}}, {'.', 0xfcd303ff, {0.0171875f, 0.0777778f}}, {'.', 0xfcd303ff, {0.0515625f, 0.0777778f}},
+    {'^', 0xffff, {0.0015625f, 0.0805556f}}, {'^', 0xffff, {0.0625000f, 0.0805556f}}, {'.', 0xffff, {0.0593750f, 0.1222222f}}, {'.', 0xffff, {0.0078125f, 0.1222222f}},
+    {'<', 0xff0000ff, {0.0046875f, 0.0166667f}}, {'>', 0xff0000ff, {0.0609375f, 0.0166667f}}, {'.', 0xff0000ff, {-0.0015625f, 0.0222222f}}, {'.', 0xff0000ff, {0.0703125f, 0.0222222f}},
+    {',', 0xff0000ff, {0.0187500f, 0.0444444f}}, {'.', 0xff0000ff, {0.0500000f, 0.0444444f}}, {'.', 0xff0000ff, {0.0546875f, 0.0305556f}}, {'.', 0xff0000ff, {0.0671875f, 0.0444444f}},
+    {'.', 0xff0000ff, {0.0015625f, 0.0444444f}},
+};
+
+const ascii2info_t qb[23] = {
+    {'*', 0x30100ff, {0.0140625f, 0.1638889f}}, {'*', 0x30100ff, {0.0921875f, 0.1638889f}}, {'*', 0x30100ff, {0.0906250f, 0.0138889f}}, {'*', 0x30100ff, {0.0140625f, 0.0138889f}},
+    {'_', 0x30100ff, {0.0046875f, 0.0111111f}}, {'_', 0x30100ff, {0.0281250f, 0.0111111f}}, {'_', 0x30100ff, {0.0531250f, 0.0111111f}}, {'_', 0x30100ff, {0.0781250f, 0.0111111f}},
+    {'_', 0x30100ff, {0.1015625f, 0.0111111f}}, {'_', 0x994e00ff, {0.0046875f, 0.2111111f}}, {'_', 0x994e00ff, {0.0281250f, 0.2111111f}}, {'_', 0x994e00ff, {0.0531250f, 0.2111111f}},
+    {'_', 0x994e00ff, {0.0781250f, 0.2111111f}}, {'_', 0x994e00ff, {0.1015625f, 0.2111111f}}, {'|', 0x994e00ff, {-0.0046875f, 0.0166667f}}, {'|', 0x994e00ff, {-0.0046875f, 0.0638889f}},
+    {'|', 0x994e00ff, {-0.0046875f, 0.1138889f}}, {'|', 0x994e00ff, {-0.0046875f, 0.1611111f}}, {'|', 0x30100ff, {0.1062500f, 0.1611111f}}, {'|', 0x30100ff, {0.1062500f, 0.1138889f}},
+    {'|', 0x30100ff, {0.1062500f, 0.0638889f}}, {'|', 0x30100ff, {0.1062500f, 0.0166667f}}, {'!', 0xea9e22ff, {0.0421875f, 0.1555556f}},
+};
+
 //
 //  Main screen
 //
@@ -78,64 +120,241 @@ static i32 midx = -1;
 
 void mainScreen(void)
 {
-    if (g_rscale > 1.001f || g_rscale < 0.999f)
-        SDL_SetRenderScale(g_renderer, g_rscale, g_rscale);
+    if (gRenderscale > 1.001f || gRenderscale < 0.999f)
+        SDL_SetRenderScale(g_renderer, gRenderscale, gRenderscale);
 
     // render chars
-    asciiRenderCharBuf2D(COLOR_CLEAR, 1, g_roffset.x, g_roffset.y);
+    asciiRenderCharBuf2D(COLOR_CLEAR, 1, gRenderoffset.x, gRenderoffset.y);
+
+    // render grid
+    if (mGrid) {
+        for (i32 x = -380; x < (i32) (WINDOW_WIDTH * WINDOW_SCALE) + 400; x += GRID_SIZE)
+            renderRectangleColor(x + gRenderoffset.x, -400.0f + gRenderoffset.y, 1.0f, (WINDOW_HEIGHT * WINDOW_SCALE) + 800.0f, COLOR_BLUE);
+
+        for (i32 y = -420; y < (i32) (WINDOW_HEIGHT * WINDOW_SCALE) + 400; y += GRID_SIZE)
+            renderRectangleColor(-400.0f + gRenderoffset.x, y + gRenderoffset.y, (WINDOW_WIDTH * WINDOW_SCALE) + 800.0f, 1.0f, COLOR_BLUE);
+    }
 
     // render box
-    if ((g_box || g_inputmode == INPUT_MODE_CHAR || g_inputmode == INPUT_MODE_COLOR) && g_current >= 0)
-        renderHitbox(g_charbuf2D[g_chars[g_current]].xpos - 2.0f + g_roffset.x, g_charbuf2D[g_chars[g_current]].ypos - 2.0f + g_roffset.y, 18.0f, 18.0f);
-
+    if ((g_box || gInmode == INPUT_MODE_CHAR || gInmode == INPUT_MODE_COLOR) && gCurrentchar >= 0)
+        renderHitbox(g_charbuf2D[gCharbuf[gCurrentchar]].xpos - 2.0f + gRenderoffset.x, g_charbuf2D[gCharbuf[gCurrentchar]].ypos - 2.0f + gRenderoffset.y, 18.0f, 18.0f);
     
     if (midx > -1)
-        renderHitbox(g_charbuf2D[g_chars[midx]].xpos - 2.0f + g_roffset.x, g_charbuf2D[g_chars[midx]].ypos - 2.0f + g_roffset.y, 18.0f, 18.0f);
+        renderHitbox(g_charbuf2D[gCharbuf[midx]].xpos - 2.0f + gRenderoffset.x, g_charbuf2D[gCharbuf[midx]].ypos - 2.0f + gRenderoffset.y, 18.0f, 18.0f);
 
     // render anchor
-    if (g_box || g_inputmode == INPUT_MODE_ANCHOR) {
-        renderRectangleColor(g_anchor.x + g_anchortmp.x - 1.0f + g_roffset.x, g_anchor.y + g_anchortmp.y - 10.0f + g_roffset.y, 2.0f, 20.0f, COLOR_RED);
-        renderRectangleColor(g_anchor.x + g_anchortmp.x - 10.0f + g_roffset.x, g_anchor.y + g_anchortmp.y - 1.0f + g_roffset.y, 20.0f, 2.0f, COLOR_RED);
+    if (g_box || gInmode == INPUT_MODE_ANCHOR) {
+        renderRectangleColor(gAnchorpos.x + gAnchortmp.x - 1.0f + gRenderoffset.x, gAnchorpos.y + gAnchortmp.y - 10.0f + gRenderoffset.y, 2.0f, 20.0f, COLOR_RED);
+        renderRectangleColor(gAnchorpos.x + gAnchortmp.x - 10.0f + gRenderoffset.x, gAnchorpos.y + gAnchortmp.y - 1.0f + gRenderoffset.y, 20.0f, 2.0f, COLOR_RED);
     }
 
     SDL_SetRenderScale(g_renderer, 1.0f, 1.0f);
 
     // render char list
-    for (u32 i = 0; i < g_charidx; i++) {
-        if (i == g_current)
-            renderRectangleColor((WINDOW_WIDTH * WINDOW_SCALE) - 185.0f, 25.0f + (i * 16.0f) + g_scrollheight, 154.0f, 16.0f, COLOR_M_GRAY);
+    for (u32 i = 0; i < gNumchars; i++) {
+        if (i == gCurrentchar && !mMultiselect)
+            renderRectangleColor((WINDOW_WIDTH * WINDOW_SCALE) - 185.0f, 25.0f + (i * 16.0f) + gRenderscroll, 154.0f, 16.0f, COLOR_M_GRAY);
 
         renderStrColorFmt
         (
-            (WINDOW_WIDTH * WINDOW_SCALE) - 180, 30 + (i * 16) + g_scrollheight, 0.125f, COLOR_WHITE, "[%c] X: %4.0f Y: %3.0f",
-            g_charbuf2D[g_chars[i]].charID, g_charbuf2D[g_chars[i]].xpos, g_charbuf2D[g_chars[i]].ypos
+            (WINDOW_WIDTH * WINDOW_SCALE) - 180, 30 + (i * 16) + gRenderscroll, 0.125f, COLOR_WHITE, "[%c] X: %4.0f Y: %3.0f",
+            g_charbuf2D[gCharbuf[i]].charID, g_charbuf2D[gCharbuf[i]].xpos, g_charbuf2D[gCharbuf[i]].ypos
         );
+
+        if (mMultiselect) {
+            for (u32 k = 0; k < gNumselected; k++) {
+                if (gMultiselbuf[k] == gCharbuf[i]) {
+                    renderHitbox((WINDOW_WIDTH * WINDOW_SCALE) - 185.0f, 25.0f + (i * 16.0f) + gRenderscroll, 154.0f, 16.0f);
+                    break;
+                }
+            }
+        }
     }
 
     // render edit input
-    if (g_inputmode == INPUT_MODE_CHAR || g_inputmode == INPUT_MODE_COLOR) {
+    if (gInmode == INPUT_MODE_CHAR || gInmode == INPUT_MODE_COLOR)
+    {
         const char* str;
         char c = 32;
 
-        if (g_inputmode == INPUT_MODE_CHAR)
+        if (gInmode == INPUT_MODE_CHAR)
             str = "CHR";
-        else
+        else if (gInmode == INPUT_MODE_COLOR)
             str = "COL";
+        else
+            str = "<ERR>";
 
-        if (g_inputidx)
-            c = g_inputbuf[0];
+        if (gInidx)
+            c = gInputbuf[0];
 
         renderRectangleColor(25.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 45.0f, 96.0f, 16.0f, COLOR_M_GRAY);
-        renderStrColorFmt(30, 680, 0.125f, COLOR_WHITE, "EDIT %s: %c", str, c);
+        renderStrColorFmt(30, (i32) (WINDOW_HEIGHT * WINDOW_SCALE) - 41, 0.125f, COLOR_WHITE, "EDIT %s: %c", str, c);
+    }
+    else if (gInmode == INPUT_MODE_SCOLOR)
+    {
+        renderRectangleColor(25.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 45.0f, 152.0f, 16.0f, COLOR_M_GRAY);
+        renderStrColorFmt(30, (i32) (WINDOW_HEIGHT * WINDOW_SCALE) - 41, 0.125f, COLOR_WHITE, "EDIT COL%d: #%.*s", gEditcol, gInidx, gInputbuf);
     }
 
     // render animation frameinfo
-    if (g_numframes > 1) {
+    if (gNumframes > 1) {
         renderRectangleColor((WINDOW_WIDTH * WINDOW_SCALE) - 300.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 40.0f, 90.0f, 16.0f, COLOR_M_GRAY);
-        renderStrColorFmt((WINDOW_WIDTH * WINDOW_SCALE) - 295, (WINDOW_HEIGHT * WINDOW_SCALE) - 35, 0.125f, COLOR_WHITE, "FRAME %d/%d", g_frameidx, g_numframes);
+        renderStrColorFmt((WINDOW_WIDTH * WINDOW_SCALE) - 295, (WINDOW_HEIGHT * WINDOW_SCALE) - 35, 0.125f, COLOR_WHITE, "FRAME %d/%d", gFrameidx, gNumframes);
     }
 
+    // render shortcut colors
+    renderRectangleColor(25.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 245.0f, 12.0f, 32.0f, gColors[0]);
+    renderRectangleColor(25.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 195.0f, 12.0f, 32.0f, gColors[1]);
+    renderRectangleColor(25.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 145.0f, 12.0f, 32.0f, gColors[2]);
+    renderRectangleColor(25.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 95.0f, 12.0f, 32.0f, gColors[3]);
+
+    if (gEditcol >= 0)
+        renderHitbox(23.0f, (WINDOW_HEIGHT * WINDOW_SCALE) - 247.0f + (50.0f * gEditcol), 36.0f, 36.0f);
+
     SDL_RenderPresent(g_renderer);
+}
+
+//
+//  SDL Init
+//
+SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
+{
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        SDL_Log("Failed to initialized SDL: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+
+    if (!SDL_CreateWindowAndRenderer("ASCII-EDIT 2D", WINDOW_WIDTH * WINDOW_SCALE, WINDOW_HEIGHT * WINDOW_SCALE, SDL_WINDOW_BORDERLESS, &window, &g_renderer)) {
+        SDL_Log("Failed to create window: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
+    }
+
+    initInterface();
+
+    initRenderer();
+
+    initAscii(ASCII_RENDER_MODE_2D);
+
+    if (!loadCharTextures("..\\resources\\ascii\\pressstart\\", 95))
+        return SDL_APP_FAILURE;
+
+    loadObject(qb, 23);
+    
+    SDL_SetRenderScale(g_renderer, WINDOW_SCALE, WINDOW_SCALE);
+
+    return SDL_APP_CONTINUE;
+}
+
+//
+//  SDL Event
+//
+SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
+{
+    if (event->type == SDL_EVENT_QUIT)
+    {
+        return SDL_APP_SUCCESS;
+    }
+    else if (event->type == SDL_EVENT_KEY_UP)
+    {
+        if (event->key.key == SDLK_LSHIFT || event->key.key == SDLK_RSHIFT)
+            g_shift = 0;
+        else if (event->key.key == SDLK_LCTRL || event->key.key == SDLK_RCTRL)
+            g_box = 0;
+        else if (event->key.key == SDLK_LALT || event->key.key == SDLK_RALT)
+            g_alt = 0;
+
+        return SDL_APP_CONTINUE;
+    }
+    else if (event->type == SDL_EVENT_KEY_DOWN)
+    {
+        if (event->key.key == SDLK_LSHIFT || event->key.key == SDLK_RSHIFT) {
+            g_shift = 1;
+            return SDL_APP_CONTINUE;
+        } else if (event->key.key == SDLK_LCTRL || event->key.key == SDLK_RCTRL) {
+            g_box = 1;
+            return SDL_APP_CONTINUE;
+        } else if (event->key.key == SDLK_LALT || event->key.key == SDLK_RALT) {
+            g_alt = 1;
+            return SDL_APP_CONTINUE;
+        }
+
+        g_iterate = 1;
+
+        switch (gInmode) {
+        case INPUT_MODE_STD:
+            return stdInputMode(event->key.key);
+        
+        case INPUT_MODE_CHAR:
+        case INPUT_MODE_COLOR:
+        case INPUT_MODE_SCOLOR:
+            return txtInputMode(event->key.key);
+
+        case INPUT_MODE_ANCHOR:
+            return anchorInputMode(event->key.key);
+
+        default:
+            rAssert(0);
+            break;
+        }
+    }
+    else if (event->type == SDL_EVENT_MOUSE_WHEEL)
+    {
+        gRenderscroll += event->wheel.y * 16;
+
+        if (gRenderscroll > 0.0f)
+            gRenderscroll = 0.0f;
+
+        if ((i32) gRenderscroll < -((gNumchars * 16) - (WINDOW_HEIGHT * WINDOW_SCALE * 0.7f)))
+            gRenderscroll = (f32) -((gNumchars * 16) - (WINDOW_HEIGHT * WINDOW_SCALE * 0.7f));
+    }
+    else if (event->type == SDL_EVENT_MOUSE_MOTION)
+    {
+        midx = -1;
+
+        for (u32 i = 0; i < gNumchars; i++) {
+            if (g_charbuf2D[gCharbuf[i]].xpos > (event->motion.x / gRenderscale) - gRenderoffset.x || (g_charbuf2D[gCharbuf[i]].xpos) + (64.0f * ASCII_RENDER_SCALE) < (event->motion.x / gRenderscale) - gRenderoffset.x)
+                continue;
+
+            if (g_charbuf2D[gCharbuf[i]].ypos > (event->motion.y / gRenderscale) - gRenderoffset.y || (g_charbuf2D[gCharbuf[i]].ypos) + (64.0f * ASCII_RENDER_SCALE) < (event->motion.y / gRenderscale) - gRenderoffset.y)
+                continue;
+
+            midx = i;
+        }
+    }
+    else if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN)
+    {
+        if (event->button.button == 1 && midx > -1) {
+            if (mMultiselect)
+                addCharToSelection(midx);
+            else
+                gCurrentchar = midx;
+        }
+    }
+
+    return SDL_APP_CONTINUE;
+}
+
+//
+//  SDL Update
+//
+SDL_AppResult SDL_AppIterate(void* appstate)
+{
+    SDL_Event next;
+
+    mainScreen();
+
+    SDL_WaitEvent(&next);
+
+    return SDL_AppEvent(NULL, &next);
+}
+
+//
+//  SDL Exit
+//
+void SDL_AppQuit(void* appstate, SDL_AppResult result)
+{
+    cleanupRenderer();
+    cleanupAscii();
 }
 
 /*
@@ -185,141 +404,3 @@ void getCircleCoords2(f32 radius, f32 x1, f32 y1, u32 divisions)
     }
 }
 */
-
-//
-//  SDL Init
-//
-SDL_AppResult SDL_AppInit(void** appstate, int argc, char** argv)
-{
-    if (!SDL_Init(SDL_INIT_VIDEO)) {
-        SDL_Log("Failed to initialized SDL: %s", SDL_GetError());
-        return SDL_APP_FAILURE;
-    }
-
-    if (!SDL_CreateWindowAndRenderer("ASCII-EDIT 2D", WINDOW_WIDTH * WINDOW_SCALE, WINDOW_HEIGHT * WINDOW_SCALE, SDL_WINDOW_BORDERLESS, &window, &g_renderer)) {
-        SDL_Log("Failed to create window: %s", SDL_GetError());
-        return SDL_APP_FAILURE;
-    }
-
-    initInterface();
-
-    initRenderer();
-
-    initAscii(ASCII_RENDER_MODE_2D);
-
-    if (!loadCharTextures("..\\resources\\ascii\\pressstart\\", 95))
-        return SDL_APP_FAILURE;
-
-    //loadObject(obj, 195);
-    
-    SDL_SetRenderScale(g_renderer, WINDOW_SCALE, WINDOW_SCALE);
-
-    return SDL_APP_CONTINUE;
-}
-
-//
-//  SDL Event
-//
-SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
-{
-    if (event->type == SDL_EVENT_QUIT)
-    {
-        return SDL_APP_SUCCESS;
-    }
-    else if (event->type == SDL_EVENT_KEY_UP)
-    {
-        if (event->key.key == SDLK_LSHIFT || event->key.key == SDLK_RSHIFT)
-            g_shift = 0;
-        else if (event->key.key == SDLK_LCTRL || event->key.key == SDLK_RCTRL)
-            g_box = 0;
-        else if (event->key.key == SDLK_LALT || event->key.key == SDLK_RALT)
-            g_alt = 0;
-
-        return SDL_APP_CONTINUE;
-    }
-    else if (event->type == SDL_EVENT_KEY_DOWN)
-    {
-        if (event->key.key == SDLK_LSHIFT || event->key.key == SDLK_RSHIFT) {
-            g_shift = 1;
-            return SDL_APP_CONTINUE;
-        } else if (event->key.key == SDLK_LCTRL || event->key.key == SDLK_RCTRL) {
-            g_box = 1;
-            return SDL_APP_CONTINUE;
-        } else if (event->key.key == SDLK_LALT || event->key.key == SDLK_RALT) {
-            g_alt = 1;
-            return SDL_APP_CONTINUE;
-        }
-
-        g_iterate = 1;
-
-        switch (g_inputmode) {
-        case INPUT_MODE_STD:
-            return stdInputMode(event->key.key);
-        
-        case INPUT_MODE_CHAR:
-        case INPUT_MODE_COLOR:
-            return txtInputMode(event->key.key);
-
-        case INPUT_MODE_ANCHOR:
-            return anchorInputMode(event->key.key);
-
-        default:
-            rAssert(0);
-            break;
-        }
-    }
-    else if (event->type == SDL_EVENT_MOUSE_WHEEL)
-    {
-        g_scrollheight += event->wheel.y * 16;
-
-        if (g_scrollheight > 0.0f)
-            g_scrollheight = 0.0f;
-
-        if ((i32) g_scrollheight < -((g_charidx * 16) - (WINDOW_HEIGHT * WINDOW_SCALE * 0.7f)))
-            g_scrollheight = (f32) -((g_charidx * 16) - (WINDOW_HEIGHT * WINDOW_SCALE * 0.7f));
-    }
-    else if (event->type == SDL_EVENT_MOUSE_MOTION)
-    {
-        midx = -1;
-
-        for (u32 i = 0; i < g_charidx; i++) {
-            if (g_charbuf2D[g_chars[i]].xpos > (event->motion.x / g_rscale) - g_roffset.x || (g_charbuf2D[g_chars[i]].xpos) + (64.0f * ASCII_RENDER_SCALE) < (event->motion.x / g_rscale) - g_roffset.x)
-                continue;
-
-            if (g_charbuf2D[g_chars[i]].ypos > (event->motion.y / g_rscale) - g_roffset.y || (g_charbuf2D[g_chars[i]].ypos) + (64.0f * ASCII_RENDER_SCALE) < (event->motion.y / g_rscale) - g_roffset.y)
-                continue;
-
-            midx = i;
-        }
-    }
-    else if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN)
-    {
-        if (event->button.button == 1 && midx > -1)
-            g_current = midx;
-    }
-
-    return SDL_APP_CONTINUE;
-}
-
-//
-//  SDL Update
-//
-SDL_AppResult SDL_AppIterate(void* appstate)
-{
-    SDL_Event next;
-
-    mainScreen();
-
-    SDL_WaitEvent(&next);
-
-    return SDL_AppEvent(NULL, &next);
-}
-
-//
-//  SDL Exit
-//
-void SDL_AppQuit(void* appstate, SDL_AppResult result)
-{
-    cleanupRenderer();
-    cleanupAscii();
-}
